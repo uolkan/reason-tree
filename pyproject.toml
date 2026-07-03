@@ -1,7 +1,7 @@
 [project]
 name = "reasontree"
 version = "0.1.0"
-description = "Model-guided tree search for Claude."
+description = "A Claude Code skill for state-action reasoning."
 requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
@@ -16,4 +16,4 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [project.scripts]
-reasontree = "reasontree.reasontree:main"
+reasontree-demo = "reasontree.cli:main"

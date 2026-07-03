@@ -13,7 +13,7 @@ def main() -> None:
     parser.add_argument("demo", choices=["chess"], nargs="?", default="chess")
     parser.add_argument("--depth", type=int, default=3)
     parser.add_argument("--width", type=int, default=3)
-    parser.add_argument("--beam-width", type=int, default=2)
+    parser.add_argument("--keep-paths", type=int, default=2)
     parser.add_argument("--max-nodes", type=int, default=48)
     parser.add_argument("--html", type=Path)
     parser.add_argument("--log", type=Path, help="Optional JSONL trace log path.")
@@ -23,7 +23,7 @@ def main() -> None:
     config = ReasonTreeConfig(
         max_depth=args.depth,
         branch_width=args.width,
-        beam_width=args.beam_width,
+        keep_paths=args.keep_paths,
         max_nodes=args.max_nodes,
     )
     results = []
@@ -32,7 +32,6 @@ def main() -> None:
 
     for result in results:
         print(f"\n== {result.problem} ==")
-        print(f"Direct baseline: {result.direct_baseline}")
         print(f"Expected: {result.expected}")
         print(f"ReasonTree: {result.best_action} (avg={result.best_reward:.2f})")
         print("Trace:")

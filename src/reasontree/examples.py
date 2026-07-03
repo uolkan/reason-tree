@@ -9,7 +9,7 @@ class ChessMateAdapter:
     root_state = "White to move: 4r3/2Q5/p3qkp1/1p1p2pp/2bP4/P3B1PP/1RP1PPK1/6N1 w - - 0 1"
 
     def direct_baseline(self) -> str:
-        return "direct run did not complete under eval budget"
+        return "one-shot baseline not included"
 
     def branches(self, state: str) -> list[Branch]:
         tree = {

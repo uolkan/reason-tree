@@ -58,7 +58,7 @@ class Node:
 class ReasonTreeConfig:
     max_depth: int = 3
     branch_width: int = 3
-    beam_width: int = 2
+    keep_paths: int = 2
     max_nodes: int = 48
 
     def __post_init__(self) -> None:
@@ -66,8 +66,8 @@ class ReasonTreeConfig:
             raise ValueError("max_depth must be between 1 and 5")
         if not 1 <= self.branch_width <= 5:
             raise ValueError("branch_width must be between 1 and 5")
-        if self.beam_width < 1:
-            raise ValueError("beam_width must be at least 1")
+        if self.keep_paths < 1:
+            raise ValueError("keep_paths must be at least 1")
 
 
 @dataclass(frozen=True)
@@ -104,7 +104,7 @@ class ReasonTreeRunner:
             config={
                 "max_depth": self.config.max_depth,
                 "branch_width": self.config.branch_width,
-                "beam_width": self.config.beam_width,
+                "keep_paths": self.config.keep_paths,
                 "max_nodes": self.config.max_nodes,
             },
         )
@@ -129,7 +129,7 @@ class ReasonTreeRunner:
             if not next_frontier:
                 self._log("stop_expansion", depth=depth, reason="no_expandable_frontier")
                 break
-            frontier = sorted(next_frontier, key=self._path_reward, reverse=True)[: self.config.beam_width]
+            frontier = sorted(next_frontier, key=self._path_reward, reverse=True)[: self.config.keep_paths]
             self._log(
                 "select_frontier",
                 depth=depth,
