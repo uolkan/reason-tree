@@ -2,9 +2,9 @@
 
 # ReasonTree
 
-**Give Claude a small search tree before it commits to an answer.**
+**Give Claude a bounded search tree before it burns tokens on a guess.**
 
-ReasonTree is a Claude Code skill for multi-step problems: planning, coding, research, writing, and decisions where a one-shot answer is too shallow.
+ReasonTree is a Claude Code skill for multi-step problems: planning, coding, research, writing, and decisions where a one-shot answer can be both expensive and brittle.
 
 </div>
 
@@ -17,6 +17,17 @@ state -> candidate actions -> next states -> scores -> selected path -> synthesi
 ```
 
 It is not a bigger model and it is not a chess engine. It is a reasoning workflow: make Claude compare a few possible paths, test assumptions, keep the best paths, and explain why the final answer survived.
+
+The failure mode ReasonTree targets is not just "the model got it wrong." It is the messier pattern where a one-shot call thinks for a long time, spends a lot of tokens inside an opaque chain, and still lands on an unsupported answer or no usable answer at all.
+
+ReasonTree treats that as a search-control problem:
+
+- cap the depth
+- cap the number of actions per state
+- score sibling branches together
+- keep only the strongest paths
+- preserve facts, assumptions, and failure notes
+- synthesize across the tree instead of trusting the first plausible line
 
 Default search shape:
 
@@ -75,7 +86,7 @@ The real controller is Python:
 Python tree controller -> claude -p structured JSON -> score/select paths -> final synthesis
 ```
 
-Python owns the tree. Claude proposes and scores candidate branches for each expanded node. The controller keeps the strongest paths and expands them up to the configured depth.
+Python owns the tree. Claude proposes and scores candidate branches for each expanded node. The controller keeps the strongest paths and expands them up to the configured depth. The goal is not to make Claude "think more"; it is to make the thinking smaller, bounded, inspectable, and easier to verify.
 
 Run it after installing the package:
 
@@ -112,7 +123,7 @@ ReasonTree explores the forcing line:
 | ![Start position](assets/chess/reasontree-ch-01-start.svg) | ![Bxg5+](assets/chess/reasontree-ch-01-step-1-bxg5.svg) | ![Kxg5](assets/chess/reasontree-ch-01-step-2-kxg5.svg) | ![Qf4 mate](assets/chess/reasontree-ch-01-step-3-qf4-mate.svg) |
 | position | `1. Bxg5+` | `1... Kxg5` | `2. Qf4#` |
 
-This demo is a workflow illustration, not a benchmark claim about any model.
+This demo is a workflow illustration, not a benchmark claim about any model. The broader point is the control loop: instead of one long hidden attempt, ReasonTree turns a hard prompt into small visible branches.
 
 ## Optional Local Demo
 
@@ -137,4 +148,4 @@ tests/                               regression tests
 
 ReasonTree is an early prototype. The useful claim is narrow:
 
-> Search-time structure can make brittle multi-step reasoning easier to inspect, compare, and verify.
+> Search-time structure can make brittle multi-step reasoning more bounded, inspectable, comparable, and verifiable.

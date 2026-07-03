@@ -1,10 +1,10 @@
 ---
-description: Use ReasonTree for multi-step problems where a one-shot answer is brittle and several candidate paths should be compared before committing.
+description: Use ReasonTree for multi-step problems where a one-shot answer may wander, overthink, or commit too early, and several candidate paths should be compared before committing.
 ---
 
 # ReasonTree
 
-Use ReasonTree to turn a task into a small state-action search tree.
+Use ReasonTree to turn a task into a small state-action search tree. The point is not longer reasoning. The point is bounded reasoning: fewer branches, clearer state transitions, explicit scoring, and a concise synthesis.
 
 ## When To Use
 
@@ -14,6 +14,7 @@ Use this skill when:
 - the user needs a decision, plan, diagnosis, repair, or synthesis
 - assumptions or tradeoffs matter
 - candidate paths can be scored, checked, or compared
+- the one-shot answer is likely to be long, opaque, or brittle
 
 Do not use it for simple Q&A, obvious one-step tasks, or cases where tree search would add fake rigor.
 
@@ -44,6 +45,7 @@ Do not use it for simple Q&A, obvious one-step tasks, or cases where tree search
 10. Critique the selected path before answering.
 
 Avoid repeatedly asking the same state again. Revisit only if new evidence or a verifier failure changes the state.
+Keep node notes short. Prefer a compact tree with useful evidence over a long chain of unverified thoughts.
 
 ## Node Format
 
@@ -85,4 +87,3 @@ Failure check: ...
 ```
 
 If evidence is weak, say so. If no branch is good enough, return the best partial path and the missing information needed to decide.
-
