@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+.mypy_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+examples/code_repair/claude_direct_*.py

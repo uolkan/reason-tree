@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "move": {
+      "type": "string"
+    },
+    "principal_variation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["move", "principal_variation"]
+}

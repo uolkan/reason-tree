@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReasonTree Demo Report</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'base' });
+  </script>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f7f8fa; color: #111827; }
+    header { padding: 40px 48px 24px; background: #1f2937; color: white; }
+    h1 { margin: 0 0 8px; font-size: 34px; letter-spacing: 0; }
+    header p { max-width: 820px; margin: 0; color: #cbd5e1; font-size: 17px; line-height: 1.5; }
+    main { padding: 28px 48px 56px; display: grid; gap: 24px; }
+    section { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+    h2 { margin: 0 0 16px; font-size: 22px; }
+    p { line-height: 1.55; }
+    a { color: #0f766e; }
+    code { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px; padding: 1px 4px; }
+    .evidence-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 18px 0; }
+    .evidence-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background: #fbfcfd; }
+    .evidence-card h3 { margin: 0 0 12px; font-size: 17px; }
+    .status { display: inline-block; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .status.bad { background: #fee2e2; color: #991b1b; }
+    .status.good { background: #dcfce7; color: #166534; }
+    .facts { margin: 0; padding-left: 18px; line-height: 1.6; }
+    .note { margin: 14px 0 0; color: #475569; font-size: 14px; }
+    .boards { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 12px; margin-top: 16px; }
+    .board { border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; background: white; }
+    .board img { display: block; width: 100%; height: auto; }
+    .board span { display: block; padding: 8px; font-size: 13px; color: #334155; border-top: 1px solid #e5e7eb; }
+    .verdict { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .metric { border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background: #f9fafb; }
+    .label { display: block; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+    .value { font-size: 17px; font-weight: 650; }
+    .trace { margin: 0; padding-left: 20px; line-height: 1.55; }
+    .mermaid { margin-top: 18px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px; background: #ffffff; overflow-x: auto; }
+    @media (max-width: 760px) { header, main { padding-left: 18px; padding-right: 18px; } .verdict, .evidence-grid, .boards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ReasonTree</h1>
+    <p>Search-time reasoning for LLMs: separate facts from assumptions, branch into actions, simulate next states, score paths, and synthesize an auditable answer instead of one brittle reply.</p>
+  </header>
+  <main>
+    <section>
+  <h2>Direct Sonnet 5 vs ReasonTree</h2>
+  <p>Same chess position, local Claude Code harness, effort <code>medium</code>. Direct one-shot runs are tracked as completion evidence, not as proof that a model can never solve the puzzle.</p>
+  <div class="evidence-grid">
+    <div class="evidence-card">
+      <h3>Direct one-shot ask</h3>
+      <div class="status bad">Did not complete</div>
+      <ul class="facts">
+        <li>Prompt: <a href="../evals/prompts/chess_mate2_direct.md">chess_mate2_direct.md</a></li>
+        <li>Sonnet 5: timeout after 75 seconds, <a href="../evals/raw_model_outputs/chess_reasontree_ch_01_direct_sonnet5_medium_20260702.json.timeout.txt">raw file</a>, <a href="../evals/raw_model_outputs/chess_reasontree_ch_01_direct_sonnet5_medium_20260702.metadata.json">metadata</a></li>
+        <li>Opus 4.8 safe mode: timeout after 90 seconds, <a href="../evals/raw_model_outputs/chess_reasontree_ch_01_direct_structured_opus48_medium_safemode_20260702.json.timeout.txt">raw file</a>, <a href="../evals/raw_model_outputs/chess_reasontree_ch_01_direct_structured_opus48_medium_safemode_20260702.metadata.json">metadata</a></li>
+      </ul>
+    </div>
+    <div class="evidence-card">
+      <h3><code>/reasontree</code> with tools</h3>
+      <div class="status good">Solved with verified path</div>
+      <ul class="facts">
+        <li>Prompt: <a href="../evals/prompts/chess_mate2_reasontree_tool.md">chess_mate2_reasontree_tool.md</a></li>
+        <li>Result: <code>Bxg5+ Kxg5 Qf4#</code></li>
+        <li>Runtime: 10.3s</li>
+        <li>Raw evidence: <a href="../evals/raw_model_outputs/chess_reasontree_ch_01_skill_tools_fastpath_sonnet5_medium_20260702.json">structured JSON output</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">The successful run uses the ReasonTree skill with tools enabled and the repo-local verifier <a href="../scripts/chess_mate_search.py">chess_mate_search.py</a> as the scorer. Pure text skill runs are kept in <code>evals/raw_model_outputs/</code> as timeout evidence; the public demo should not claim a magic prompt solved the puzzle.</p>
+  <div class="boards">
+    <div class="board"><img src="../assets/chess/reasontree-ch-01-start.svg" alt="Start position"><span>Start position</span></div>
+    <div class="board"><img src="../assets/chess/reasontree-ch-01-step-1-bxg5.svg" alt="Bxg5+"><span>1. Bxg5+</span></div>
+    <div class="board"><img src="../assets/chess/reasontree-ch-01-step-2-kxg5.svg" alt="Kxg5"><span>1... Kxg5</span></div>
+    <div class="board"><img src="../assets/chess/reasontree-ch-01-step-3-qf4-mate.svg" alt="Qf4 mate"><span>2. Qf4#</span></div>
+  </div>
+</section>
+    <section>
+  <h2>chess_mate2</h2>
+  <div class="verdict">
+    <div class="metric"><span class="label">Direct baseline</span><span class="value">direct run did not complete under eval budget</span></div>
+    <div class="metric"><span class="label">Expected</span><span class="value">Bxg5+</span></div>
+    <div class="metric"><span class="label">ReasonTree</span><span class="value">Bxg5+ (0.87)</span></div>
+  </div>
+  <ol class="trace"><li>Bxg5+: score=0.65, Sacrifices the bishop to force the black king onto g5 or f5.</li>
+<li>...Kxg5: score=0.95, The king capture walks into Qf4 mate.</li>
+<li>Qf4#: score=1.00, The queen covers the escape squares and gives mate.</li></ol>
+  <div class="evidence-card">
+    <h3>Tree synthesis</h3>
+    <ul class="facts"><li><strong>Takeaway:</strong> Bxg5+ is the selected path; Qh7? is the closest alternative. Use the runner-up if the selected path&#x27;s assumptions fail.</li></ul>
+  </div>
+  <pre class="mermaid">graph TD
+  N0[&quot;Problem&quot;]
+  N0 --&gt; N1
+  N1[&quot;Qf7+?&lt;br/&gt;score -0.70&quot;]
+  N0 --&gt; N2
+  N2[&quot;Bxg5+&lt;br/&gt;score 0.65&quot;]
+  N2 --&gt; N3
+  N3[&quot;...Kxg5&lt;br/&gt;score 0.95&quot;]
+  N3 --&gt; N4
+  N4[&quot;Qf4#&lt;br/&gt;score 1.00&quot;]
+  N3 --&gt; N5
+  N5[&quot;Nf3+?&lt;br/&gt;score -0.40&quot;]
+  N2 --&gt; N6
+  N6[&quot;...Kf5&lt;br/&gt;score 0.90&quot;]
+  N6 --&gt; N7
+  N7[&quot;Qf4#&lt;br/&gt;score 1.00&quot;]
+  N6 --&gt; N8
+  N8[&quot;Nf3+?&lt;br/&gt;score -0.40&quot;]
+  N2 --&gt; N9
+  N9[&quot;...hxg5?&lt;br/&gt;score 0.20&quot;]
+  N0 --&gt; N10
+  N10[&quot;Qh7?&lt;br/&gt;score -0.50&quot;]</pre>
+</section>
+<section>
+  <h2>planning_context_ledger</h2>
+  <div class="verdict">
+    <div class="metric"><span class="label">Direct baseline</span><span class="value">ship the full change now</span></div>
+    <div class="metric"><span class="label">Expected</span><span class="value">launch_pilot_with_rollback_and_review</span></div>
+    <div class="metric"><span class="label">ReasonTree</span><span class="value">run_reversible_pilot (0.86)</span></div>
+  </div>
+  <ol class="trace"><li>run_reversible_pilot: score=0.72, Balances customer urgency with a reversible path and gives the team information. Assumptions: a smaller pilot can still create visible customer value. Note: This branch converts the psychological belief into a testable communication problem.</li>
+<li>pilot_to_small_segment: score=0.90, Creates customer value, preserves reversibility, and tests whether the weak-looking pilot belief is real. Assumptions: a limited segment is enough to learn. Note: This branch dominates because it is action plus learning, not delay disguised as safety.</li>
+<li>launch_pilot_with_rollback_and_review: score=0.96, This keeps the deadline, reduces regret, and makes the belief about looking weak observable. Assumptions: reviewing pilot evidence is acceptable to stakeholders. Note: Recommended first move: pilot now, review evidence, then decide whether to widen.</li></ol>
+  <div class="evidence-card">
+    <h3>Tree synthesis</h3>
+    <ul class="facts"><li><strong>Facts used:</strong> customer impact is high, rollback is easy, deadline is Friday</li><li><strong>Assumptions:</strong> a smaller pilot can still create visible customer value, a limited segment is enough to learn, reviewing pilot evidence is acceptable to stakeholders</li><li><strong>Beliefs tested:</strong> asking for a narrower pilot looks weak, a staged plan looks weak to stakeholders, visible progress plus evidence is stronger than full launch theater</li><li><strong>Takeaway:</strong> run_reversible_pilot is the selected path; delay_for_refactor is the closest alternative. Use the runner-up if the selected path&#x27;s assumptions fail.</li></ul>
+  </div>
+  <pre class="mermaid">graph TD
+  N0[&quot;Problem&quot;]
+  N0 --&gt; N1
+  N1[&quot;ship_full_change_now&lt;br/&gt;score 0.25&quot;]
+  N0 --&gt; N2
+  N2[&quot;run_reversible_pilot&lt;br/&gt;score 0.72&quot;]
+  N2 --&gt; N3
+  N3[&quot;define_pilot_success_metric&lt;br/&gt;score 0.78&quot;]
+  N2 --&gt; N4
+  N4[&quot;pilot_to_small_segment&lt;br/&gt;score 0.90&quot;]
+  N4 --&gt; N5
+  N5[&quot;launch_pilot_with_rollback_and_review&lt;br/&gt;score 0.96&quot;]
+  N4 --&gt; N6
+  N6[&quot;launch_pilot_without_review&lt;br/&gt;score 0.55&quot;]
+  N2 --&gt; N7
+  N7[&quot;ask_for_full_delay&lt;br/&gt;score 0.45&quot;]
+  N0 --&gt; N8
+  N8[&quot;delay_for_refactor&lt;br/&gt;score 0.38&quot;]</pre>
+</section>
+  </main>
+</body>
+</html>

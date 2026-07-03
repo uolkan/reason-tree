@@ -1,0 +1,19 @@
+{
+  "run_id": "chess_reasontree_ch_01_direct_sonnet5_medium_20260702",
+  "date": "2026-07-02",
+  "claude_code_version": "2.1.198",
+  "model_arg": "sonnet",
+  "resolved_model": "claude-sonnet-5",
+  "model_resolution_evidence": [
+    "evals/raw_model_outputs/sonnet5_structured_smoke.json",
+    "evals/raw_model_outputs/chess_reasontree_ch_01_skill_tools_fastpath_sonnet5_medium_20260702.json"
+  ],
+  "effort": "medium",
+  "tools": "",
+  "timeout_s": 75,
+  "max_budget_usd": 0.3,
+  "prompt": "evals/prompts/chess_mate2_direct.md",
+  "schema": "evals/schemas/move.schema.json",
+  "output": "evals/raw_model_outputs/chess_reasontree_ch_01_direct_sonnet5_medium_20260702.json.timeout.txt",
+  "result": "timeout_no_structured_move"
+}
