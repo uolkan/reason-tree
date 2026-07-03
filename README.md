@@ -1,10 +1,25 @@
+<div align="center">
+
 # ReasonTree
 
-Model-guided tree search for Claude.
+**A search-time reasoning skill for making Claude branch, score, verify, and synthesize before it answers.**
 
-ReasonTree turns a brittle one-shot prompt into a small state-action tree: separate facts from assumptions, propose candidate actions, simulate next states, score branches, expand the most promising path, and synthesize an auditable answer.
+*One prompt is a guess. A small tree is a workflow.*
 
-It is not a chess engine. Chess is the first visual demo because the answer can be checked cleanly. The same pattern is meant for planning, code repair, research synthesis, finance/risk decisions, and other problems where a single LLM answer is often too shallow.
+[![Skill](https://img.shields.io/badge/skill-general_state--action_reasoning-111827)](.claude/skills/reasontree/SKILL.md)
+[![Demo](https://img.shields.io/badge/demo-chess_mate--in--2-0f766e)](#demo)
+[![Default](https://img.shields.io/badge/default-depth_3_width_3-2563eb)](#how-it-works)
+[![Max](https://img.shields.io/badge/max-depth_5_width_5-7c3aed)](#how-it-works)
+
+</div>
+
+ReasonTree turns a brittle one-shot prompt into a bounded state-action tree: separate facts from assumptions, propose candidate actions, simulate next states, score branches, expand the most promising path, and synthesize an auditable answer.
+
+The skill is general. It is meant for problems where a model should compare options before committing: planning, coding, research synthesis, risk decisions, writing strategy, and other multi-step tasks where a fluent first answer can be too shallow.
+
+It can help smaller or cheaper models by moving part of the intelligence into the workflow: branch, simulate, score, verify. Stronger models can also benefit because the same scaffold forces the model to expose candidate paths, assumptions, and failure modes instead of hiding everything inside one completion.
+
+The first public demo is chess because the answer can be checked cleanly. ReasonTree is not a chess engine; chess is the microscope.
 
 The default runner is MCTS-inspired rather than naive classic MCTS. It does not repeatedly revisit the same node by default; it expands a bounded set of branches, scores them, keeps a small beam, and stops when a verified path is found.
 
@@ -33,26 +48,18 @@ Bxg5+ Kxg5 Qf4#
 Raw successful run:
 [structured JSON](evals/raw_model_outputs/chess_reasontree_ch_01_skill_tools_fastpath_sonnet5_medium_20260702.json).
 
+| Run | Result |
+| --- | --- |
+| Sonnet 5 one-shot, structured output, effort medium | Did not complete within the 75s local eval window |
+| Opus 4.8 one-shot, structured output, safe mode, effort medium | Did not complete within the 90s local eval window |
+| ReasonTree skill + tools + repo-local verifier | Returned `Bxg5+ Kxg5 Qf4#` |
+
 | Without ReasonTree | With ReasonTree: step 1 | With ReasonTree: step 2 | With ReasonTree: mate |
 | --- | --- | --- | --- |
 | ![Start position](assets/chess/reasontree-ch-01-start.svg) | ![Bxg5+](assets/chess/reasontree-ch-01-step-1-bxg5.svg) | ![Kxg5](assets/chess/reasontree-ch-01-step-2-kxg5.svg) | ![Qf4 mate](assets/chess/reasontree-ch-01-step-3-qf4-mate.svg) |
 | direct run did not complete in local eval window | `1. Bxg5+` | `1... Kxg5` | `2. Qf4#` |
 
 The full five-position puzzle set is in [docs/chess_puzzle_set.md](docs/chess_puzzle_set.md).
-
-The second demo is a planning/context-ledger example:
-
-```text
-Facts: customer impact is high, rollback is easy, refactor risk is medium, deadline is Friday.
-Belief: asking for a narrower pilot may look weak.
-Preference: choose a low-regret reversible move.
-```
-
-Without ReasonTree, the baseline is the tempting one-shot answer: ship the full change now. With ReasonTree, the tree separates facts from assumptions and selects a reversible pilot with rollback and review:
-
-```text
-run_reversible_pilot -> pilot_to_small_segment -> launch_pilot_with_rollback_and_review
-```
 
 ## How It Works
 
@@ -75,7 +82,7 @@ Default search budget:
 
 ```bash
 git clone git@github.com:uolkan/reason-tree.git
-cd reasontree
+cd reason-tree
 python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 ```
@@ -87,7 +94,9 @@ Claude Code must already be installed and authenticated on the machine running t
 From this repo in Claude Code:
 
 ```text
-/reasontree should I ship a small bug fix today or wait for a larger refactor next week? Constraints: customer impact is high, refactor risk is medium, rollback is easy.
+/reasontree <your task>
+
+Include the goal, known facts, assumptions or beliefs, hard constraints, success criteria, and any verifier that can check candidate answers.
 ```
 
 From the shell, for the chess demo:
@@ -127,19 +136,12 @@ reasontree \
   --out evals/raw_model_outputs/reasontree_chess_reasontree_ch_01.json
 ```
 
-For the deterministic public demos:
+For the deterministic public demo:
 
 ```bash
-PYTHONPATH=src python -m reasontree.cli all \
+PYTHONPATH=src python -m reasontree.cli chess \
   --html demo/reasontree_demo_report.html \
   --log logs/reasontree_demo.jsonl
-```
-
-When `all` is used, logs are split by demo:
-
-```text
-logs/reasontree_demo-chess.jsonl
-logs/reasontree_demo-planning.jsonl
 ```
 
 Useful flags:

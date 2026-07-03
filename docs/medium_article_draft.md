@@ -49,7 +49,7 @@ ReasonTree has four conceptual workers:
 
 In ReasonTree, those roles are coordinated by a Python runner. It behaves like a small team of nested specialists, but the tree controller is explicit: Python owns the search loop, while Claude proposes, simulates, scores, and critiques.
 
-## What the Demos Show
+## What the Demo Shows
 
 The chess demo starts with a compact mate-in-2 puzzle set. The first public example is:
 
@@ -62,20 +62,6 @@ The ReasonTree demo is designed differently. It asks the model to externalize th
 `Bxg5+ -> Kxg5 -> Qf4#`
 
 That distinction matters. The lesson is not "say a magic prompt and the model becomes a chess engine." In fact, pure text ReasonTree skill runs also timed out in local tests. The reliable demo path uses `/reasontree` with tools enabled and a repo-local chess verifier as the scorer. The broader lesson is that search-time reasoning becomes easier to inspect when the workflow has a bounded tree, an answer key, and a critic step.
-
-The second demo is a planning/context-ledger example:
-
-- fact: customer impact is high
-- fact: rollback is easy
-- fact: the deadline is Friday
-- belief: asking for a narrower pilot may look weak
-- preference: choose a low-regret reversible move
-
-A one-shot answer may jump to "ship the full change now." ReasonTree separates facts from assumptions, branches the options, and selects:
-
-`run_reversible_pilot -> pilot_to_small_segment -> launch_pilot_with_rollback_and_review`
-
-The important detail is that the final answer is not just the best leaf. The tree synthesis records which facts mattered, which assumptions changed the ranking, and which belief was tested by the selected path.
 
 This is intentionally modest. The demo is deterministic so anyone can run the tests without API keys. The real evaluation should compare direct model answers against workflow-assisted answers on a fixed puzzle set, with raw model outputs saved.
 

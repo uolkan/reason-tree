@@ -115,39 +115,6 @@
   N0 --&gt; N10
   N10[&quot;Qh7?&lt;br/&gt;score -0.50&quot;]</pre>
 </section>
-<section>
-  <h2>planning_context_ledger</h2>
-  <div class="verdict">
-    <div class="metric"><span class="label">Direct baseline</span><span class="value">ship the full change now</span></div>
-    <div class="metric"><span class="label">Expected</span><span class="value">launch_pilot_with_rollback_and_review</span></div>
-    <div class="metric"><span class="label">ReasonTree</span><span class="value">run_reversible_pilot (0.86)</span></div>
-  </div>
-  <ol class="trace"><li>run_reversible_pilot: score=0.72, Balances customer urgency with a reversible path and gives the team information. Assumptions: a smaller pilot can still create visible customer value. Note: This branch converts the psychological belief into a testable communication problem.</li>
-<li>pilot_to_small_segment: score=0.90, Creates customer value, preserves reversibility, and tests whether the weak-looking pilot belief is real. Assumptions: a limited segment is enough to learn. Note: This branch dominates because it is action plus learning, not delay disguised as safety.</li>
-<li>launch_pilot_with_rollback_and_review: score=0.96, This keeps the deadline, reduces regret, and makes the belief about looking weak observable. Assumptions: reviewing pilot evidence is acceptable to stakeholders. Note: Recommended first move: pilot now, review evidence, then decide whether to widen.</li></ol>
-  <div class="evidence-card">
-    <h3>Tree synthesis</h3>
-    <ul class="facts"><li><strong>Facts used:</strong> customer impact is high, rollback is easy, deadline is Friday</li><li><strong>Assumptions:</strong> a smaller pilot can still create visible customer value, a limited segment is enough to learn, reviewing pilot evidence is acceptable to stakeholders</li><li><strong>Beliefs tested:</strong> asking for a narrower pilot looks weak, a staged plan looks weak to stakeholders, visible progress plus evidence is stronger than full launch theater</li><li><strong>Takeaway:</strong> run_reversible_pilot is the selected path; delay_for_refactor is the closest alternative. Use the runner-up if the selected path&#x27;s assumptions fail.</li></ul>
-  </div>
-  <pre class="mermaid">graph TD
-  N0[&quot;Problem&quot;]
-  N0 --&gt; N1
-  N1[&quot;ship_full_change_now&lt;br/&gt;score 0.25&quot;]
-  N0 --&gt; N2
-  N2[&quot;run_reversible_pilot&lt;br/&gt;score 0.72&quot;]
-  N2 --&gt; N3
-  N3[&quot;define_pilot_success_metric&lt;br/&gt;score 0.78&quot;]
-  N2 --&gt; N4
-  N4[&quot;pilot_to_small_segment&lt;br/&gt;score 0.90&quot;]
-  N4 --&gt; N5
-  N5[&quot;launch_pilot_with_rollback_and_review&lt;br/&gt;score 0.96&quot;]
-  N4 --&gt; N6
-  N6[&quot;launch_pilot_without_review&lt;br/&gt;score 0.55&quot;]
-  N2 --&gt; N7
-  N7[&quot;ask_for_full_delay&lt;br/&gt;score 0.45&quot;]
-  N0 --&gt; N8
-  N8[&quot;delay_for_refactor&lt;br/&gt;score 0.38&quot;]</pre>
-</section>
   </main>
 </body>
 </html>

@@ -10,7 +10,7 @@ from .report import write_html_report
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run ReasonTree demos.")
-    parser.add_argument("demo", choices=["chess", "planning", "all"])
+    parser.add_argument("demo", choices=["chess"], nargs="?", default="chess")
     parser.add_argument("--depth", type=int, default=3)
     parser.add_argument("--width", type=int, default=3)
     parser.add_argument("--beam-width", type=int, default=2)
@@ -19,7 +19,7 @@ def main() -> None:
     parser.add_argument("--log", type=Path, help="Optional JSONL trace log path.")
     args = parser.parse_args()
 
-    names = ["chess", "planning"] if args.demo == "all" else [args.demo]
+    names = [args.demo]
     config = ReasonTreeConfig(
         max_depth=args.depth,
         branch_width=args.width,
@@ -28,10 +28,7 @@ def main() -> None:
     )
     results = []
     for name in names:
-        log_path = args.log
-        if log_path and len(names) > 1:
-            log_path = log_path.with_name(f"{log_path.stem}-{name}{log_path.suffix}")
-        results.append(ReasonTreeRunner(get_adapter(name), config, log_path=log_path).run())
+        results.append(ReasonTreeRunner(get_adapter(name), config, log_path=args.log).run())
 
     for result in results:
         print(f"\n== {result.problem} ==")

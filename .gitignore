@@ -7,4 +7,3 @@ __pycache__/
 dist/
 build/
 *.egg-info/
-examples/code_repair/claude_direct_*.py

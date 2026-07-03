@@ -1,5 +1,5 @@
 ---
-description: Use ReasonTree search-time reasoning when a one-shot answer is brittle. Applies to chess, code repair, project decisions, finance/risk scenarios, research synthesis, learning, writing, and planning tasks with candidate actions and evaluable outcomes.
+description: Use ReasonTree search-time reasoning when a one-shot answer is brittle. Applies to problems with candidate actions, constraints, state transitions, and evaluable outcomes.
 ---
 
 # ReasonTree
@@ -41,8 +41,7 @@ Use verifier-backed ReasonTree when a checker exists:
 - schema or policy validation
 - source citations
 - legal/policy checklist
-- chess/legal-line/mate verifier
-- calculator, spreadsheet, theorem prover, or code-quality checks
+- calculator, spreadsheet, theorem prover, or domain-specific checks
 
 Default budget:
 
@@ -108,10 +107,10 @@ Exploration means diverse strategies, evidence lenses, or hypotheses. Exploitati
 
 When the task has a reliable verifier, use it as the scorer instead of relying on narrative confidence. Examples:
 
-- Chess: compare the final answer against a withheld answer key or legal-line/mate check after the workflow has produced its line.
-- Code repair: run the relevant tests against each candidate patch when possible.
-- Data/SQL: reconcile row counts, totals, sample sizes, and metric definitions.
-- Planning or finance/risk: verify against stated constraints, risk limits, deadlines, and reversibility.
+- Executable tasks: run the relevant tests, checks, or validations when possible.
+- Data tasks: reconcile row counts, totals, sample sizes, and metric definitions.
+- Planning or risk tasks: verify against stated constraints, risk limits, deadlines, and reversibility.
+- Research tasks: verify claims against cited sources and known uncertainty.
 
 If no external verifier exists, do a critic pass and state the weakest assumption in the selected path.
 
@@ -208,16 +207,6 @@ Given the facts, path A scores highest. Even if assumption X is true, path A rem
 If assumption X is false, path B becomes nearly as good. The practical next move is therefore ...
 ```
 
-## Repo-Local Fast Path
-
-When this skill is used inside the ReasonTree repo and the task is a chess FEN with `mate in N`, use the local verifier as the scorer:
-
-```bash
-.venv/bin/python scripts/chess_mate_search.py --fen "<FEN>" --mate-in <N>
-```
-
-Use the verifier to check the final line, then return the first solution as the selected ReasonTree path. Do not spend extra turns analyzing the board after the verifier returns a forced mate.
-
 ## Output Contract
 
 ```json
@@ -252,10 +241,9 @@ Use the verifier to check the final line, then return the first solution as the 
 
 ## Use Cases
 
-- Chess or tactical puzzles with known labels.
-- Code repair where candidate patches can be tested.
-- Project-management choices with deadline, risk, and reversibility constraints.
-- Finance or strategy scenarios framed as risk planning, not investment advice.
+- Problems where several plausible actions need comparison.
+- Workflows where candidate solutions can be tested, scored, or reviewed.
+- Decisions with deadlines, constraints, risk, and reversibility tradeoffs.
 - Research synthesis where branches represent competing hypotheses.
 - Learning, writing, and personal decision practice where the goal is structured reflection.
 
