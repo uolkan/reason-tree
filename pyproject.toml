@@ -16,4 +16,5 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [project.scripts]
+reasontree = "reasontree.engine:main"
 reasontree-demo = "reasontree.cli:main"

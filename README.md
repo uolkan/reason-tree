@@ -18,7 +18,7 @@ state -> candidate actions -> next states -> scores -> selected path -> synthesi
 
 It is not a bigger model and it is not a chess engine. It is a reasoning workflow: make Claude compare a few possible paths, test assumptions, keep the best paths, and explain why the final answer survived.
 
-Default budget:
+Default search shape:
 
 - depth: 3 levels
 - actions per level: 3
@@ -67,6 +67,31 @@ The skill lives here:
 
 It is intentionally general. It does not contain chess-specific instructions. Chess is only the visual demo below.
 
+## Python Backend
+
+The real controller is Python:
+
+```text
+Python tree controller -> claude -p structured JSON -> score/select paths -> final synthesis
+```
+
+Python owns the tree. Claude proposes and scores candidate branches for each expanded node. The controller keeps the strongest paths and expands them up to the configured depth.
+
+Run it after installing the package:
+
+```bash
+reasontree \
+  --task "Choose the best next step for this product decision..." \
+  --model sonnet \
+  --effort medium \
+  --max-depth 3 \
+  --branch-width 3 \
+  --keep-paths 2 \
+  --trace-log trace.jsonl
+```
+
+`--max-budget-usd` is optional. It is not used by default.
+
 ## Demo
 
 The demo uses a chess tactic because the answer is easy to verify visually.
@@ -102,7 +127,8 @@ PYTHONPATH=src .venv/bin/python -m reasontree.cli --html demo/reasontree_demo_re
 ```text
 .claude/skills/reasontree/SKILL.md   the reusable Claude Code skill
 assets/chess/                        demo board images
-src/reasontree/                      small deterministic demo runner
+src/reasontree/engine.py             Python ReasonTree controller
+src/reasontree/cli.py                small deterministic demo runner
 scripts/chess_mate_search.py         optional chess verifier used for local checks
 tests/                               regression tests
 ```
@@ -112,4 +138,3 @@ tests/                               regression tests
 ReasonTree is an early prototype. The useful claim is narrow:
 
 > Search-time structure can make brittle multi-step reasoning easier to inspect, compare, and verify.
-
