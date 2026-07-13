@@ -211,7 +211,7 @@ def run_reasontree(
     if not expanded:
         raise RuntimeError("ReasonTree produced no branches")
 
-    best = max(expanded, key=lambda node: (node.path_score, node.score, -node.depth))
+    best = max(expanded, key=selection_key)
     critic = run_critic(task, best, client, config)
     result = {
         "best_action": best.path()[1].action if best.depth else best.action,
@@ -330,12 +330,24 @@ def runner_up(root: TreeNode, best: TreeNode) -> str | None:
     alternatives = [child for child in root.children if child.action != best_first]
     if not alternatives:
         return None
-    return max(alternatives, key=lambda node: best_leaf_score(node)).action
+    return max(alternatives, key=best_leaf_key).action
 
 
-def best_leaf_score(node: TreeNode) -> float:
+def best_leaf_key(node: TreeNode) -> tuple[bool, int, float, float]:
     leaves = walk_leaves(node)
-    return max(leaf.path_score for leaf in leaves)
+    return max(selection_key(leaf) for leaf in leaves)
+
+
+def selection_key(node: TreeNode) -> tuple[bool, int, float, float]:
+    """Prefer credible terminal results, then paths that actually gathered more evidence.
+
+    A pruned depth-1 node is still a leaf. Ranking only by mean path score can
+    therefore let that shallow, unexpanded guess outrank the branch the search
+    selected and deepened. Depth breaks that tie in favor of the investigated
+    path while preserving high-scoring terminal solutions.
+    """
+    credible_terminal = node.terminal and node.score >= 8.0
+    return credible_terminal, node.depth, node.path_score, node.score
 
 
 def walk_leaves(node: TreeNode) -> list[TreeNode]:

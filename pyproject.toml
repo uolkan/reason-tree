@@ -1,7 +1,7 @@
 [project]
 name = "reasontree"
-version = "0.1.0"
-description = "A Claude Code skill for state-action reasoning."
+version = "0.3.0"
+description = "Provider-neutral executable state-action search and verification control for fast models."
 requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
@@ -17,4 +17,7 @@ where = ["src"]
 
 [project.scripts]
 reasontree = "reasontree.engine:main"
+reasontree-check = "reasontree.check_cli:main"
+reasontree-chess-eval = "reasontree.chess_benchmark:main"
+reasontree-chess-tree = "reasontree.chess_tree:main"
 reasontree-demo = "reasontree.cli:main"

@@ -87,6 +87,56 @@ class EngineTest(unittest.TestCase):
         self.assertIn("add_child", events)
         self.assertEqual(events[-1], "final")
 
+    def test_engine_does_not_promote_a_pruned_shallow_guess(self):
+        class ShallowBiasClient:
+            def complete_json(self, prompt, schema):
+                if "Critique this ReasonTree path" in prompt:
+                    return {
+                        "valid": True,
+                        "confidence": 0.8,
+                        "failure_check": "checked",
+                        "concerns": [],
+                    }
+                if "Current state:\nroot" in prompt:
+                    return {
+                        "branches": [
+                            {
+                                "action": "investigate",
+                                "next_state": "evidence gathering",
+                                "score": 9,
+                                "terminal": False,
+                                "rationale": "best first step",
+                            },
+                            {
+                                "action": "shallow_guess",
+                                "next_state": "unsupported guess",
+                                "score": 8.5,
+                                "terminal": False,
+                                "rationale": "plausible but not selected",
+                            },
+                        ]
+                    }
+                return {
+                    "branches": [
+                        {
+                            "action": "verify_evidence",
+                            "next_state": "checked conclusion",
+                            "score": 7,
+                            "terminal": False,
+                            "rationale": "lower mean score but deeper evidence",
+                        }
+                    ]
+                }
+
+        result = run_reasontree(
+            "root",
+            ShallowBiasClient(),
+            EngineConfig(max_depth=2, branch_width=2, keep_paths=1),
+        )
+
+        self.assertEqual(result["best_action"], "investigate")
+        self.assertEqual(result["path"][-1]["action"], "verify_evidence")
+
 
 if __name__ == "__main__":
     unittest.main()

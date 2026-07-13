@@ -1,0 +1,18 @@
+{
+  "name": "correlated phishing alerts",
+  "task": "A company receives email where 1% of messages are phishing. It uses two phishing scanners. Considered separately, each scanner catches 90% of phishing messages and falsely flags 5% of legitimate messages. Both scanners flag the same message. The scanners come from the same vendor and share much of their code and training data; no joint-error or independence measurement is available. The security lead asks for the exact probability that this message is phishing. Give one numeric percentage and a brief justification.",
+  "verifier": "dependence",
+  "verifier_args": {
+    "prevalence": 0.01,
+    "sensitivity_1": 0.9,
+    "sensitivity_2": 0.9,
+    "false_positive_1": 0.05,
+    "false_positive_2": 0.05
+  },
+  "expected": {
+    "status": "underdetermined",
+    "posterior_minimum": 0.1391304347826087,
+    "posterior_maximum": 1.0,
+    "independence_scenario": 0.7659574468085106
+  }
+}

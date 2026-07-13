@@ -1,0 +1,4 @@
+interface:
+  display_name: "ReasonTree"
+  short_description: "Run bounded executable reasoning trees"
+  default_prompt: "Use $reasontree to externalize this task into bounded state-action branches, run the strongest available check, and answer from labeled evidence."
