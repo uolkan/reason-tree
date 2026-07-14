@@ -1,0 +1,25 @@
+{
+ "verifier_wall_seconds": 0.0,
+ "explain_wall_seconds": 7.32,
+ "total_wall_seconds": 7.32,
+ "explain_output_tokens": 463,
+ "explain_cost_usd": 0.007031,
+ "evidence": {
+  "branch_A_shared_cache": {
+   "same_object_returned_twice": true,
+   "user2_timeout_after_user1_set_60": 60,
+   "symptom_reproduced": true
+  },
+  "branch_B_mutable_default": {
+   "default_arg_contents_after_symptom": {},
+   "default_arg_was_mutated": false,
+   "refuted": true
+  },
+  "fix_copy_on_return": {
+   "user2_timeout_after_fix": 10,
+   "symptom_gone": true
+  },
+  "verifier_wall_seconds": 0.0
+ },
+ "explanation": "**Root cause (verified):** `functools.lru_cache` returns the same mutable dict object across calls, and `apply_user_settings` mutates it in place, causing user2 to see user1's timeout value.\n\n**Why Branch B is refuted:** The mutable default argument `overrides={}` was never mutated, as directly observed in the execution evidence.\n\n**Minimal fix:** Return a copy of the cached dict from the cached function so each caller gets an independent mutable object: `return dict(get_settings())` or `return copy.copy(cached_result)`."
+}

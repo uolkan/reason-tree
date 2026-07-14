@@ -227,6 +227,10 @@ document.querySelectorAll('[data-expand]').forEach(function(btn){
 });
 """
 
+# public aliases so larger pages (blog posts, composed reports) can reuse the styling
+CSS = _CSS
+JS = _JS
+
 _VERDICT_CHIP = {
     "selected": ("ok", "selected"),
     "survives": ("info", "survives"),
@@ -391,7 +395,8 @@ def _render_raw_pane(raw: dict[str, Any]) -> str:
     )
 
 
-def render_body(spec: dict[str, Any]) -> str:
+def render_panes(spec: dict[str, Any]) -> str:
+    """Return just the raw-trace and tree panes, for embedding in larger pages."""
     nodes = spec.get("nodes") or []
     scores = _collect_scores(nodes)
     max_abs = max(scores) if scores else 1.0
@@ -423,9 +428,11 @@ def render_body(spec: dict[str, Any]) -> str:
         tree_html = f'<ul class="vtree">{tree_items}</ul>'
 
     selected = spec.get("selected_action")
+    selection_note = spec.get(
+        "selection_note", "the branch that survives the opponent&rsquo;s strongest reply within the budget."
+    )
     verdict_html = (
-        f'<div class="verdictline">Controller selection: <b>{_esc(selected)}</b> &mdash; the branch that '
-        f"survives the opponent&rsquo;s strongest reply within the budget.</div>"
+        f'<div class="verdictline">Controller selection: <b>{_esc(selected)}</b> &mdash; {selection_note}</div>'
         if selected
         else ""
     )
@@ -438,8 +445,11 @@ def render_body(spec: dict[str, Any]) -> str:
         f"{tree_html}{verdict_html}</div></section>"
     )
     raw = spec.get("raw_trace")
-    panes = (_render_raw_pane(raw) + tree_pane) if raw else tree_pane
+    return (_render_raw_pane(raw) + tree_pane) if raw else tree_pane
 
+
+def render_body(spec: dict[str, Any]) -> str:
+    panes = render_panes(spec)
     board_svg = spec.get("board_svg")
     board_html = ""
     if board_svg:

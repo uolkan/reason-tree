@@ -1,0 +1,4 @@
+- Status: Underdetermined.
+- Verified range: 13.9% to 100%.
+- Independence scenario: 76.6%, explicitly labeled unproven.
+- Missing measurement: Measured dependence structure (joint error rates) between the two scanners.
