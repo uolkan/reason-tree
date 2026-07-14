@@ -452,7 +452,11 @@ def run_codex_case(
     effort: str,
     timeout_s: int,
 ) -> dict[str, Any]:
-    prompt += "\nReturn valid JSON only."
+    key = "selected_move_uci" if condition == "reasontree" else "move_uci"
+    prompt += (
+        "\nReturn valid JSON only. The JSON object must contain the string field "
+        f'"{key}" holding one move in UCI notation (e.g. "e2e4" or "e7e8q").'
+    )
     with tempfile.TemporaryDirectory(prefix="reasontree-chess-") as tmp:
         output_path = Path(tmp) / "answer.json"
         command = [

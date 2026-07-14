@@ -1,0 +1,834 @@
+{
+  "schema_version": 1,
+  "source": {
+    "name": "Lichess open puzzle database",
+    "url": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+    "license": "CC0",
+    "last_modified": "2026-07-01"
+  },
+  "selection": {
+    "rule": "sort the first qualifying source rows by (rating, puzzle_id), then keep the lowest-rated cases",
+    "rating_min": 2200,
+    "rating_max": 2300,
+    "max_rating_deviation": 80,
+    "min_popularity": 85,
+    "min_plays": 200,
+    "solution_length_including_setup": [
+      3,
+      7
+    ],
+    "qualifying_rows_scanned": 500,
+    "case_limit": 30
+  },
+  "generated_on": "2026-07-14",
+  "split": {
+    "rule": "first cases after frozen sort are development; remaining cases are untouched holdout",
+    "development_case_ids": [
+      "03iRI",
+      "0IP43",
+      "0MzVn",
+      "0Tbmu",
+      "08Ceb"
+    ],
+    "holdout_case_ids": [
+      "0Spmn",
+      "0U1xD",
+      "0VZEx",
+      "0eOHa",
+      "0MJk8",
+      "0bBDD",
+      "0Mf2D",
+      "0c50t",
+      "0cpPq",
+      "0e9QL",
+      "0iQwc",
+      "02eKr",
+      "07AfS",
+      "07w3Q",
+      "0Dmsm",
+      "0QtyW",
+      "0Un3g",
+      "0XiG6",
+      "0mosF",
+      "04jqV",
+      "05pKI",
+      "0EPDA",
+      "0EiFr",
+      "0RXVW",
+      "0SVg6"
+    ]
+  },
+  "cases": [
+    {
+      "puzzle_id": "03iRI",
+      "rating": 2200,
+      "rating_deviation": 75,
+      "popularity": 95,
+      "plays": 747,
+      "themes": [
+        "advantage",
+        "defensiveMove",
+        "endgame",
+        "long"
+      ],
+      "source_fen": "8/5pkp/3p1Nr1/q1p1pR2/4P2Q/1r1P3P/6P1/6K1 b - - 0 35",
+      "setup_uci": "a5a1",
+      "position_fen": "8/5pkp/3p1Nr1/2p1pR2/4P2Q/1r1P3P/6P1/q5K1 w - - 1 36",
+      "expected_uci": "g1h2",
+      "expected_san": "Kh2",
+      "solution_uci": [
+        "g1h2",
+        "g6g2",
+        "h2g2",
+        "b3b2",
+        "f5f2"
+      ],
+      "game_url": "https://lichess.org/YvbrrL2J/black#70"
+    },
+    {
+      "puzzle_id": "0IP43",
+      "rating": 2200,
+      "rating_deviation": 78,
+      "popularity": 91,
+      "plays": 486,
+      "themes": [
+        "advantage",
+        "defensiveMove",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "Qn2k2r/p4ppp/4p3/5b2/1b1q4/2n5/PP1B1PPP/R3KBNR w KQk - 0 11",
+      "setup_uci": "f1b5",
+      "position_fen": "Qn2k2r/p4ppp/4p3/1B3b2/1b1q4/2n5/PP1B1PPP/R3K1NR b KQk - 1 11",
+      "expected_uci": "c3b5",
+      "expected_san": "Nxb5",
+      "solution_uci": [
+        "c3b5",
+        "a8b8",
+        "e8e7",
+        "b8b7",
+        "e7f6"
+      ],
+      "game_url": "https://lichess.org/He6Ys4zE#21"
+    },
+    {
+      "puzzle_id": "0MzVn",
+      "rating": 2200,
+      "rating_deviation": 76,
+      "popularity": 91,
+      "plays": 3591,
+      "themes": [
+        "advancedPawn",
+        "crushing",
+        "endgame",
+        "long"
+      ],
+      "source_fen": "6kb/r7/6PB/1pPp4/p2Pp3/2P3K1/8/1R6 b - - 1 46",
+      "setup_uci": "a4a3",
+      "position_fen": "6kb/r7/6PB/1pPp4/3Pp3/p1P3K1/8/1R6 w - - 0 47",
+      "expected_uci": "b1b5",
+      "expected_san": "Rxb5",
+      "solution_uci": [
+        "b1b5",
+        "a7a8",
+        "c5c6",
+        "h8g7",
+        "c6c7"
+      ],
+      "game_url": "https://lichess.org/7YscOTHn/black#92"
+    },
+    {
+      "puzzle_id": "0Tbmu",
+      "rating": 2200,
+      "rating_deviation": 73,
+      "popularity": 92,
+      "plays": 9590,
+      "themes": [
+        "crushing",
+        "endgame",
+        "long",
+        "master",
+        "masterVsMaster"
+      ],
+      "source_fen": "8/5R2/7k/1p1p4/pr3pK1/5N2/8/8 b - - 1 57",
+      "setup_uci": "a4a3",
+      "position_fen": "8/5R2/7k/1p1p4/1r3pK1/p4N2/8/8 w - - 0 58",
+      "expected_uci": "g4f5",
+      "expected_san": "Kf5",
+      "solution_uci": [
+        "g4f5",
+        "b4e4",
+        "f3g5",
+        "e4e5",
+        "f5e5"
+      ],
+      "game_url": "https://lichess.org/ozqByQGr/black#114"
+    },
+    {
+      "puzzle_id": "08Ceb",
+      "rating": 2201,
+      "rating_deviation": 78,
+      "popularity": 91,
+      "plays": 1133,
+      "themes": [
+        "advantage",
+        "middlegame",
+        "short"
+      ],
+      "source_fen": "6k1/1r3r1p/pq4p1/4Q3/b2NP1P1/P4P2/1PP5/KR5R w - - 1 28",
+      "setup_uci": "h1h2",
+      "position_fen": "6k1/1r3r1p/pq4p1/4Q3/b2NP1P1/P4P2/1PP4R/KR6 b - - 2 28",
+      "expected_uci": "b7e7",
+      "expected_san": "Rbe7",
+      "solution_uci": [
+        "b7e7",
+        "e5g5",
+        "b6d4"
+      ],
+      "game_url": "https://lichess.org/UYOpVoR4#55"
+    },
+    {
+      "puzzle_id": "0Spmn",
+      "rating": 2201,
+      "rating_deviation": 75,
+      "popularity": 85,
+      "plays": 1079,
+      "themes": [
+        "advantage",
+        "discoveredAttack",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "5krr/1bp3b1/p2p1qQp/1p1PpP2/4P3/3BB3/PPP4R/2K4R w - - 5 32",
+      "setup_uci": "e3h6",
+      "position_fen": "5krr/1bp3b1/p2p1qQB/1p1PpP2/4P3/3B4/PPP4R/2K4R b - - 0 32",
+      "expected_uci": "g7h6",
+      "expected_san": "Bxh6+",
+      "solution_uci": [
+        "g7h6",
+        "h2h6",
+        "g8g6",
+        "h6h8",
+        "g6g8"
+      ],
+      "game_url": "https://lichess.org/jySqdcVJ#63"
+    },
+    {
+      "puzzle_id": "0U1xD",
+      "rating": 2201,
+      "rating_deviation": 76,
+      "popularity": 93,
+      "plays": 11430,
+      "themes": [
+        "crushing",
+        "fork",
+        "long",
+        "middlegame",
+        "sacrifice"
+      ],
+      "source_fen": "1r3rk1/p2q1pp1/1p1p1bbR/3Np1n1/2P1P3/1N3PP1/1P4K1/R2Q4 b - - 0 25",
+      "setup_uci": "g5e6",
+      "position_fen": "1r3rk1/p2q1pp1/1p1pnbbR/3Np3/2P1P3/1N3PP1/1P4K1/R2Q4 w - - 1 26",
+      "expected_uci": "d1h1",
+      "expected_san": "Qh1",
+      "solution_uci": [
+        "d1h1",
+        "g7h6",
+        "d5f6",
+        "g8g7",
+        "f6d7"
+      ],
+      "game_url": "https://lichess.org/Ha1IbQDg/black#50"
+    },
+    {
+      "puzzle_id": "0VZEx",
+      "rating": 2201,
+      "rating_deviation": 74,
+      "popularity": 94,
+      "plays": 9507,
+      "themes": [
+        "advantage",
+        "endgame",
+        "long"
+      ],
+      "source_fen": "2r3k1/1p3pp1/4p2p/p7/b1P5/3RPP1P/1B1Q2PK/q7 b - - 1 34",
+      "setup_uci": "a1a2",
+      "position_fen": "2r3k1/1p3pp1/4p2p/p7/b1P5/3RPP1P/qB1Q2PK/8 w - - 2 35",
+      "expected_uci": "d3a3",
+      "expected_san": "Ra3",
+      "solution_uci": [
+        "d3a3",
+        "a2c4",
+        "a3c3",
+        "c4c3",
+        "b2c3"
+      ],
+      "game_url": "https://lichess.org/PyKtjuK4/black#68"
+    },
+    {
+      "puzzle_id": "0eOHa",
+      "rating": 2201,
+      "rating_deviation": 76,
+      "popularity": 93,
+      "plays": 6012,
+      "themes": [
+        "crushing",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "5r2/p4r1k/1p2RB1b/3p2qP/2pP2pQ/2P3P1/PP3RK1/8 b - - 0 33",
+      "setup_uci": "f7f6",
+      "position_fen": "5r2/p6k/1p2Rr1b/3p2qP/2pP2pQ/2P3P1/PP3RK1/8 w - - 0 34",
+      "expected_uci": "e6f6",
+      "expected_san": "Rexf6",
+      "solution_uci": [
+        "e6f6",
+        "f8f6",
+        "f2f6",
+        "g5h4",
+        "g3h4"
+      ],
+      "game_url": "https://lichess.org/sjaZL7Vh/black#66"
+    },
+    {
+      "puzzle_id": "0MJk8",
+      "rating": 2202,
+      "rating_deviation": 77,
+      "popularity": 93,
+      "plays": 1640,
+      "themes": [
+        "advantage",
+        "discoveredAttack",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "r2r2k1/1bq1bpp1/p1n1pn1B/1p2N3/3P4/1BN1Q3/PP3PPP/3R1RK1 b - - 0 16",
+      "setup_uci": "g7h6",
+      "position_fen": "r2r2k1/1bq1bp2/p1n1pn1p/1p2N3/3P4/1BN1Q3/PP3PPP/3R1RK1 w - - 0 17",
+      "expected_uci": "e3g3",
+      "expected_san": "Qg3+",
+      "solution_uci": [
+        "e3g3",
+        "g8f8",
+        "e5g6",
+        "f7g6",
+        "g3c7"
+      ],
+      "game_url": "https://lichess.org/y9vYFbly/black#32"
+    },
+    {
+      "puzzle_id": "0bBDD",
+      "rating": 2202,
+      "rating_deviation": 79,
+      "popularity": 86,
+      "plays": 469,
+      "themes": [
+        "advantage",
+        "capturingDefender",
+        "fork",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "rn1q1rk1/p4pp1/1ppb3p/3pNb2/3Pn3/1QPN2P1/PP2PPB1/R3K2R b KQ - 1 13",
+      "setup_uci": "f7f6",
+      "position_fen": "rn1q1rk1/p5p1/1ppb1p1p/3pNb2/3Pn3/1QPN2P1/PP2PPB1/R3K2R w KQ - 0 14",
+      "expected_uci": "e5c6",
+      "expected_san": "Nxc6",
+      "solution_uci": [
+        "e5c6",
+        "b8c6",
+        "b3d5",
+        "g8h8",
+        "d5f5"
+      ],
+      "game_url": "https://lichess.org/JDZ8RVzp/black#26"
+    },
+    {
+      "puzzle_id": "0Mf2D",
+      "rating": 2203,
+      "rating_deviation": 79,
+      "popularity": 92,
+      "plays": 1831,
+      "themes": [
+        "advancedPawn",
+        "crushing",
+        "long",
+        "master",
+        "middlegame"
+      ],
+      "source_fen": "1r3r1k/7p/2p2P1P/6p1/pP4Pn/P4pNQ/5q2/K1BR4 b - - 0 33",
+      "setup_uci": "f8d8",
+      "position_fen": "1r1r3k/7p/2p2P1P/6p1/pP4Pn/P4pNQ/5q2/K1BR4 w - - 1 34",
+      "expected_uci": "d1d8",
+      "expected_san": "Rxd8+",
+      "solution_uci": [
+        "d1d8",
+        "b8d8",
+        "f6f7",
+        "d8f8",
+        "c1b2"
+      ],
+      "game_url": "https://lichess.org/BbcDt7Ka/black#66"
+    },
+    {
+      "puzzle_id": "0c50t",
+      "rating": 2203,
+      "rating_deviation": 76,
+      "popularity": 92,
+      "plays": 820,
+      "themes": [
+        "crushing",
+        "deflection",
+        "discoveredAttack",
+        "endgame",
+        "exposedKing",
+        "long",
+        "sacrifice"
+      ],
+      "source_fen": "4r1k1/pp3p1p/3q1p2/8/3P1nB1/2P5/PP1Q2KP/4R3 w - - 2 24",
+      "setup_uci": "g2f2",
+      "position_fen": "4r1k1/pp3p1p/3q1p2/8/3P1nB1/2P5/PP1Q1K1P/4R3 b - - 3 24",
+      "expected_uci": "f4d3",
+      "expected_san": "Nd3+",
+      "solution_uci": [
+        "f4d3",
+        "d2d3",
+        "d6h2",
+        "f2f3",
+        "e8e1"
+      ],
+      "game_url": "https://lichess.org/doOtYGfF#47"
+    },
+    {
+      "puzzle_id": "0cpPq",
+      "rating": 2203,
+      "rating_deviation": 76,
+      "popularity": 97,
+      "plays": 310,
+      "themes": [
+        "crushing",
+        "endgame",
+        "long",
+        "master"
+      ],
+      "source_fen": "8/p5pk/2p1p3/P1Pb3r/3B1Pqp/6P1/5Q1P/4R1K1 w - - 2 47",
+      "setup_uci": "e1e5",
+      "position_fen": "8/p5pk/2p1p3/P1PbR2r/3B1Pqp/6P1/5Q1P/6K1 b - - 3 47",
+      "expected_uci": "h4g3",
+      "expected_san": "hxg3",
+      "solution_uci": [
+        "h4g3",
+        "e5h5",
+        "g4h5",
+        "f2g3",
+        "h5d1"
+      ],
+      "game_url": "https://lichess.org/AeuB6ZyS#93"
+    },
+    {
+      "puzzle_id": "0e9QL",
+      "rating": 2203,
+      "rating_deviation": 75,
+      "popularity": 95,
+      "plays": 1564,
+      "themes": [
+        "advantage",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "6nr/3q1k2/p2BrPpp/3Q4/4N2P/P7/1PP3P1/5R1K w - - 1 32",
+      "setup_uci": "g2g4",
+      "position_fen": "6nr/3q1k2/p2BrPpp/3Q4/4N1PP/P7/1PP5/5R1K b - - 0 32",
+      "expected_uci": "d7b5",
+      "expected_san": "Qb5",
+      "solution_uci": [
+        "d7b5",
+        "d5b5",
+        "a6b5",
+        "f1e1",
+        "g8f6"
+      ],
+      "game_url": "https://lichess.org/Cjo1YJYR#63"
+    },
+    {
+      "puzzle_id": "0iQwc",
+      "rating": 2203,
+      "rating_deviation": 75,
+      "popularity": 88,
+      "plays": 438,
+      "themes": [
+        "bishopEndgame",
+        "crushing",
+        "defensiveMove",
+        "endgame",
+        "short"
+      ],
+      "source_fen": "8/8/7P/8/k1p5/p1B5/K1b5/8 b - - 7 74",
+      "setup_uci": "c2b3",
+      "position_fen": "8/8/7P/8/k1p5/pbB5/K7/8 w - - 8 75",
+      "expected_uci": "a2b1",
+      "expected_san": "Kb1",
+      "solution_uci": [
+        "a2b1",
+        "a3a2",
+        "b1c1"
+      ],
+      "game_url": "https://lichess.org/KkYMspl7/black#148"
+    },
+    {
+      "puzzle_id": "02eKr",
+      "rating": 2204,
+      "rating_deviation": 79,
+      "popularity": 87,
+      "plays": 533,
+      "themes": [
+        "advancedPawn",
+        "advantage",
+        "endgame",
+        "short"
+      ],
+      "source_fen": "8/1p6/pk1r3p/8/2P5/1P2pQ2/P2q1bP1/3R3K w - - 8 47",
+      "setup_uci": "d1d2",
+      "position_fen": "8/1p6/pk1r3p/8/2P5/1P2pQ2/P2R1bP1/7K b - - 0 47",
+      "expected_uci": "e3d2",
+      "expected_san": "exd2",
+      "solution_uci": [
+        "e3d2",
+        "c4c5",
+        "f2c5"
+      ],
+      "game_url": "https://lichess.org/9PhViUls#93"
+    },
+    {
+      "puzzle_id": "07AfS",
+      "rating": 2204,
+      "rating_deviation": 77,
+      "popularity": 94,
+      "plays": 6508,
+      "themes": [
+        "attraction",
+        "crushing",
+        "discoveredAttack",
+        "exposedKing",
+        "long",
+        "middlegame",
+        "pin",
+        "sacrifice"
+      ],
+      "source_fen": "r2qr3/1bp3kp/2n2p2/3Q1P2/1bB5/2N2P2/PP4PP/R3K1NR w KQ - 1 17",
+      "setup_uci": "g1e2",
+      "position_fen": "r2qr3/1bp3kp/2n2p2/3Q1P2/1bB5/2N2P2/PP2N1PP/R3K2R b KQ - 2 17",
+      "expected_uci": "e8e2",
+      "expected_san": "Rxe2+",
+      "solution_uci": [
+        "e8e2",
+        "e1e2",
+        "c6d4",
+        "e2d3",
+        "b7d5"
+      ],
+      "game_url": "https://lichess.org/GZ26D7uP#33"
+    },
+    {
+      "puzzle_id": "07w3Q",
+      "rating": 2204,
+      "rating_deviation": 77,
+      "popularity": 91,
+      "plays": 993,
+      "themes": [
+        "advantage",
+        "middlegame",
+        "short"
+      ],
+      "source_fen": "5k1r/p4p1p/7b/8/2bN1P2/N1PnR3/Pr4BP/R5K1 b - - 0 22",
+      "setup_uci": "d3f4",
+      "position_fen": "5k1r/p4p1p/7b/8/2bN1n2/N1P1R3/Pr4BP/R5K1 w - - 0 23",
+      "expected_uci": "a3c4",
+      "expected_san": "Nxc4",
+      "solution_uci": [
+        "a3c4",
+        "b2g2",
+        "g1h1"
+      ],
+      "game_url": "https://lichess.org/OvjJDxKT/black#44"
+    },
+    {
+      "puzzle_id": "0Dmsm",
+      "rating": 2204,
+      "rating_deviation": 76,
+      "popularity": 91,
+      "plays": 1338,
+      "themes": [
+        "crushing",
+        "endgame",
+        "long",
+        "master",
+        "pin",
+        "quietMove"
+      ],
+      "source_fen": "8/1B6/8/8/7K/r4R2/6kP/8 b - - 0 62",
+      "setup_uci": "a3f3",
+      "position_fen": "8/1B6/8/8/7K/5r2/6kP/8 w - - 0 63",
+      "expected_uci": "h2h3",
+      "expected_san": "h3",
+      "solution_uci": [
+        "h2h3",
+        "g2f2",
+        "b7f3",
+        "f2f3",
+        "h4g5"
+      ],
+      "game_url": "https://lichess.org/miZWFjyx/black#124"
+    },
+    {
+      "puzzle_id": "0QtyW",
+      "rating": 2204,
+      "rating_deviation": 77,
+      "popularity": 88,
+      "plays": 547,
+      "themes": [
+        "advantage",
+        "deflection",
+        "endgame",
+        "master",
+        "short"
+      ],
+      "source_fen": "8/p4pp1/1p2n2p/4k3/PPP1B3/4KP1P/8/8 b - - 2 32",
+      "setup_uci": "a7a5",
+      "position_fen": "8/5pp1/1p2n2p/p3k3/PPP1B3/4KP1P/8/8 w - - 0 33",
+      "expected_uci": "c4c5",
+      "expected_san": "c5",
+      "solution_uci": [
+        "c4c5",
+        "b6c5",
+        "b4a5"
+      ],
+      "game_url": "https://lichess.org/rL3UMRvI/black#64"
+    },
+    {
+      "puzzle_id": "0Un3g",
+      "rating": 2204,
+      "rating_deviation": 79,
+      "popularity": 91,
+      "plays": 547,
+      "themes": [
+        "advantage",
+        "endgame",
+        "pin",
+        "short"
+      ],
+      "source_fen": "1rr5/p4pkp/6p1/2q5/Q2p1PP1/P2P3P/1PP5/1K1R3R w - - 1 24",
+      "setup_uci": "h3h4",
+      "position_fen": "1rr5/p4pkp/6p1/2q5/Q2p1PPP/P2P4/1PP5/1K1R3R b - - 0 24",
+      "expected_uci": "c5c3",
+      "expected_san": "Qc3",
+      "solution_uci": [
+        "c5c3",
+        "b2b4",
+        "a7a5"
+      ],
+      "game_url": "https://lichess.org/vimCM6Nk#47"
+    },
+    {
+      "puzzle_id": "0XiG6",
+      "rating": 2204,
+      "rating_deviation": 75,
+      "popularity": 94,
+      "plays": 8123,
+      "themes": [
+        "crushing",
+        "discoveredAttack",
+        "long",
+        "middlegame",
+        "pin",
+        "queensideAttack"
+      ],
+      "source_fen": "1k3r1r/1pq1n3/p3B2p/2Np2p1/PQ1P4/8/1PP3Pp/R6K b - - 1 27",
+      "setup_uci": "e7c6",
+      "position_fen": "1k3r1r/1pq5/p1n1B2p/2Np2p1/PQ1P4/8/1PP3Pp/R6K w - - 2 28",
+      "expected_uci": "c5a6",
+      "expected_san": "Nxa6+",
+      "solution_uci": [
+        "c5a6",
+        "b8a7",
+        "b4f8",
+        "h8f8",
+        "a6c7"
+      ],
+      "game_url": "https://lichess.org/lom1V1i4/black#54"
+    },
+    {
+      "puzzle_id": "0mosF",
+      "rating": 2204,
+      "rating_deviation": 77,
+      "popularity": 92,
+      "plays": 3439,
+      "themes": [
+        "crushing",
+        "endgame",
+        "master",
+        "short"
+      ],
+      "source_fen": "2n1k3/2B5/1p4p1/2p1pP2/2P1P3/3K4/2P5/8 b - - 3 42",
+      "setup_uci": "g6f5",
+      "position_fen": "2n1k3/2B5/1p6/2p1pp2/2P1P3/3K4/2P5/8 w - - 0 43",
+      "expected_uci": "e4f5",
+      "expected_san": "exf5",
+      "solution_uci": [
+        "e4f5",
+        "c8e7",
+        "d3e4"
+      ],
+      "game_url": "https://lichess.org/R4Qw8EKi/black#84"
+    },
+    {
+      "puzzle_id": "04jqV",
+      "rating": 2205,
+      "rating_deviation": 78,
+      "popularity": 86,
+      "plays": 268,
+      "themes": [
+        "advantage",
+        "middlegame",
+        "short"
+      ],
+      "source_fen": "3B1b1r/p1R2ppp/k1q1p3/1ppbP3/8/8/PP3PPP/3Q2K1 b - - 6 23",
+      "setup_uci": "c6e8",
+      "position_fen": "3Bqb1r/p1R2ppp/k3p3/1ppbP3/8/8/PP3PPP/3Q2K1 w - - 7 24",
+      "expected_uci": "d1d3",
+      "expected_san": "Qd3",
+      "solution_uci": [
+        "d1d3",
+        "c5c4",
+        "d3d4"
+      ],
+      "game_url": "https://lichess.org/7DsqhcxN/black#46"
+    },
+    {
+      "puzzle_id": "05pKI",
+      "rating": 2205,
+      "rating_deviation": 76,
+      "popularity": 92,
+      "plays": 931,
+      "themes": [
+        "crushing",
+        "endgame",
+        "long"
+      ],
+      "source_fen": "3r4/p2rkp1p/1p2p1p1/1P3PP1/1q5P/2RB4/3Q1PK1/8 b - - 0 30",
+      "setup_uci": "d7d3",
+      "position_fen": "3r4/p3kp1p/1p2p1p1/1P3PP1/1q5P/2Rr4/3Q1PK1/8 w - - 0 31",
+      "expected_uci": "c3c7",
+      "expected_san": "Rc7+",
+      "solution_uci": [
+        "c3c7",
+        "e7d6",
+        "c7c6",
+        "d6e5",
+        "d2b4"
+      ],
+      "game_url": "https://lichess.org/stYEbmzy/black#60"
+    },
+    {
+      "puzzle_id": "0EPDA",
+      "rating": 2205,
+      "rating_deviation": 80,
+      "popularity": 91,
+      "plays": 1943,
+      "themes": [
+        "advancedPawn",
+        "attraction",
+        "crushing",
+        "master",
+        "masterVsMaster",
+        "middlegame",
+        "short"
+      ],
+      "source_fen": "3r2k1/1bq2p1p/3b1PP1/1B1p2P1/P1p2N2/8/1P1Q4/4R1K1 b - - 0 31",
+      "setup_uci": "d6f4",
+      "position_fen": "3r2k1/1bq2p1p/5PP1/1B1p2P1/P1p2b2/8/1P1Q4/4R1K1 w - - 0 32",
+      "expected_uci": "g6f7",
+      "expected_san": "gxf7+",
+      "solution_uci": [
+        "g6f7",
+        "g8f7",
+        "e1e7"
+      ],
+      "game_url": "https://lichess.org/NwcpXEj2/black#62"
+    },
+    {
+      "puzzle_id": "0EiFr",
+      "rating": 2205,
+      "rating_deviation": 78,
+      "popularity": 86,
+      "plays": 557,
+      "themes": [
+        "crushing",
+        "middlegame",
+        "short"
+      ],
+      "source_fen": "r1b2rk1/2p2ppp/pbpp1q2/4n3/PPB1P3/N1P1B3/3Q1PPP/R4RK1 w - - 0 14",
+      "setup_uci": "e3b6",
+      "position_fen": "r1b2rk1/2p2ppp/pBpp1q2/4n3/PPB1P3/N1P5/3Q1PPP/R4RK1 b - - 0 14",
+      "expected_uci": "e5f3",
+      "expected_san": "Nf3+",
+      "solution_uci": [
+        "e5f3",
+        "g1h1",
+        "f3d2"
+      ],
+      "game_url": "https://lichess.org/mpllLCq1#27"
+    },
+    {
+      "puzzle_id": "0RXVW",
+      "rating": 2205,
+      "rating_deviation": 78,
+      "popularity": 91,
+      "plays": 629,
+      "themes": [
+        "advantage",
+        "long",
+        "middlegame"
+      ],
+      "source_fen": "r5k1/p4r2/2R2p1p/2B1p1p1/2P2n2/P4Q2/1Pq2PPP/4R1K1 w - - 1 23",
+      "setup_uci": "c6f6",
+      "position_fen": "r5k1/p4r2/5R1p/2B1p1p1/2P2n2/P4Q2/1Pq2PPP/4R1K1 b - - 0 23",
+      "expected_uci": "e5e4",
+      "expected_san": "e4",
+      "solution_uci": [
+        "e5e4",
+        "f3e4",
+        "c2e4",
+        "e1e4",
+        "f7f6"
+      ],
+      "game_url": "https://lichess.org/UbDg8xdW#45"
+    },
+    {
+      "puzzle_id": "0SVg6",
+      "rating": 2205,
+      "rating_deviation": 77,
+      "popularity": 100,
+      "plays": 441,
+      "themes": [
+        "crushing",
+        "defensiveMove",
+        "endgame",
+        "master",
+        "rookEndgame",
+        "short"
+      ],
+      "source_fen": "5r2/1P6/2k5/6P1/8/2p4R/6K1/8 b - - 1 54",
+      "setup_uci": "c6b7",
+      "position_fen": "5r2/1k6/8/6P1/8/2p4R/6K1/8 w - - 0 55",
+      "expected_uci": "h3c3",
+      "expected_san": "Rxc3",
+      "solution_uci": [
+        "h3c3",
+        "f8g8",
+        "c3c5"
+      ],
+      "game_url": "https://lichess.org/YXOZoIIo/black#108"
+    }
+  ]
+}

@@ -196,6 +196,54 @@ Run the local bounded tree without a model call:
 
 The benchmark CLI resumes existing JSONL outputs by puzzle, provider, model, and condition. Use `--no-resume` only when an intentional fresh trial is required.
 
+## Second tier: Sonnet 5 at 2200-2300
+
+The Haiku result raised an obvious question: does the pattern survive a stronger model, or does it only exist at the weakest tier? On 2026-07-14 we repeated the full protocol one tier up, with Claude Sonnet 5 and a harder frozen set.
+
+### Finding the failure threshold
+
+Five-puzzle probes per rating band (tools disabled, effort medium, 240-second wall — eight times the Haiku cap):
+
+| Band | Sonnet 5 raw | GPT-5.6 Luna raw (cross-provider observation) |
+| --- | ---: | ---: |
+| 2000-2100 | 1/5 | 3/5 |
+| 2200-2300 | 0/5 | 2/5 |
+| 2400-2500 | 1/5 | 2/5 |
+| 2600-2700 | not probed | 1/5 |
+
+Sonnet 5 without tools collapses on rated tactics around 2200 despite the generous budget. Luna shows a different profile — a gradual decline with no cliff; we report it as measured and make no claims about why the providers differ.
+
+### Frozen 2200-2300 holdout
+
+A new 30-case manifest was frozen with the same selection rule ([`lichess_2200_2300_v1.json`](../benchmarks/chess/lichess_2200_2300_v1.json)): first 5 cases were the probe set above, the remaining 25 the untouched holdout. The unchanged Haiku-era adapter configuration (depth 4, quiescence 3, 300k nodes, 12s) was compared against deeper variants before opening the model results:
+
+| Adapter config | Holdout accuracy | Median wall |
+| --- | ---: | ---: |
+| depth 4, 12s (frozen since Haiku run) | 18/25 | 3.0s |
+| depth 4, 30s, deeper quiescence | 18/25 | 2.8s |
+| depth 5, 30s | 14/25 | 22.0s |
+| depth 6, 60s | 14/25 | 60.0s |
+
+Deeper searching *hurt*: odd depths expose the classic horizon effect (the line ends on the searcher's own move), and the longer configs increasingly hit the wall clock with an incomplete root. The original even-depth config generalized as-is.
+
+Paired result on the 25 holdout cases:
+
+| | Sonnet 5 raw | Bounded tree |
+| --- | ---: | ---: |
+| Correct | 3/25 (12%) | 18/25 (72%) |
+| Median wall | 57s | 3.0s |
+| Mean cost equivalent | $0.100/case | local, no model call |
+
+Paired outcomes: both correct 3, tree-only 15, **raw-only 0**, both failed 7. Four raw calls hit the 240-second wall with no usable move; total raw spend was $2.10 for 3 correct answers.
+
+### Ten rescue cases, end to end
+
+The first ten holdout cases where raw Sonnet failed and the tree succeeded were run through the full tree + Sonnet explanation path: **10/10 correct**, 4.6-17.2 seconds per case (mean 10.8s), mean cost equivalent $0.008/case — about 5x faster and 12x cheaper than the raw attempts they replace, with the answer verified rather than guessed.
+
+One operational lesson is recorded here because it changed a result: an earlier attempt at this rescue run used five parallel workers, and CPU contention pushed two searches into the 12-second wall with incomplete roots, producing two wrong selections (both runs are archived under [`results/2200/`](../benchmarks/chess/results/2200/)). Wall-clock-capped searches are only reproducible when run serially; a node-cap-only mode is the robust alternative for parallel harnesses.
+
+Luna on the same holdout, for the record: 6/25 raw (median 76s), tree-only 14, raw-only 2 against the same adapter.
+
 ## Independent reproduction
 
 A second, separate session re-verified this benchmark on 2026-07-13 without reusing any cached results:

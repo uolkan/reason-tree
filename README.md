@@ -40,10 +40,14 @@ The adapter surface is intended to grow to time zones, units/double-counting che
 
 The current reproducible result uses 25 frozen Lichess holdout puzzles rated 1809-1819:
 
-| Condition | Correct | Median wall time |
-| --- | ---: | ---: |
-| raw Haiku, no tools, 30s cap | 1/25 | 30.02s |
-| bounded ReasonTree chess adapter | 21/25 | 5.70s |
+| Tier | Condition | Correct | Median wall time |
+| --- | --- | ---: | ---: |
+| 1809-1819 | raw Haiku, no tools, 30s cap | 1/25 | 30.02s |
+| 1809-1819 | bounded ReasonTree chess adapter | 21/25 | 5.70s |
+| 2200-2300 | raw Sonnet 5, no tools, 240s cap | 3/25 | 57s |
+| 2200-2300 | same adapter, unchanged config | 18/25 | 3.0s |
+
+The pattern survives a model tier: at 2200-2300, raw Sonnet 5 solved 3/25 despite an 8x longer budget, the unchanged adapter solved 18/25, and the first ten rescue cases ran end-to-end through tree + Sonnet explanation at 10/10, ~11s and ~$0.008 per case. Deeper search configs (depth 5/6) scored *worse* than the frozen depth-4 — the horizon-effect analysis is in the benchmark doc.
 
 The first ten holdout cases where direct Haiku failed and the bounded tree succeeded were then run through the full tree + Haiku explanation path. It returned 10/10 correct in 8.12-21.47 seconds per case. The complete protocol, all 25 paired outcomes, cost boundaries, and caveats are in [the rated chess benchmark](docs/CHESS_BENCHMARK.md).
 
