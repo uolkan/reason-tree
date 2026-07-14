@@ -59,6 +59,20 @@ Run the first rescue case locally without a model call:
   --depth 4 --quiescence-depth 3 --max-nodes 300000 --timeout-s 12
 ```
 
+## Navigable Tree Artifacts
+
+The search tree is not just a log — it can be rendered as a self-contained, navigable HTML artifact in which every branch, counter-branch, score, and stop budget is expandable and inspectable:
+
+```bash
+.venv/bin/reasontree-chess-artifact \
+  --fen '2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23' \
+  --output tree.html
+```
+
+The renderer itself is domain-neutral: any adapter can emit the same tree-spec JSON and pipe it through `reasontree-tree-artifact --spec spec.json --output tree.html`. The chess producer adds the opponent's strongest replies as real counter-branches by re-searching each successor position, and can embed a captured raw-model stream side by side for comparison (`--raw-probe`).
+
+A generated example is committed at [`docs/examples/rescue-03kkE.html`](docs/examples/rescue-03kkE.html): the left pane replays raw Haiku's verbatim generation stream on rescue puzzle 03kkE — circling between candidates, hallucinating the board, and finally committing to an illegal move after 127 seconds — while the right pane shows the bounded tree that selects the correct `Qxd5` in under five seconds. The captured streams live in [`benchmarks/chess/results/probe600/`](benchmarks/chess/results/probe600/), and the uncapped-probe protocol is in [the chess benchmark](docs/CHESS_BENCHMARK.md).
+
 ## Subscription CLI Usage
 
 Claude Code's non-interactive command is `claude -p`. The Codex equivalent is `codex exec`; `codex -p` means profile, not print mode.

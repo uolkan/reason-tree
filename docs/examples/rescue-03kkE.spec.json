@@ -1,0 +1,323 @@
+{
+ "eyebrow": "ReasonTree · raw stream vs bounded tree · verbatim capture 2026-07-14",
+ "title": "One puzzle, two minds: a lost monologue vs a bounded tree",
+ "task": "Lichess puzzle 03kkE (rated 1809), White to move. Left: raw Haiku's actual generation stream, captured verbatim with no time or budget caps — it wanders, re-parses the board, loops back, and after 127 seconds commits to an illegal move. Right: the same model wrapped in ReasonTree — the controller enumerates legal branches on a real board, scores each against the opponent's strongest reply, and selects Qxd5 in under five seconds. Every branch below is expandable.",
+ "state": "FEN: 2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23\n\n. . r . . r k .\n. . . . q . p .\np . . . p . . p\n. p . b . . . .\nP . . . . . . .\n. Q N . R P . .\n. P . . . P . P\n. . R . . . K .",
+ "budget": {
+  "depth": 4,
+  "max_nodes": 300000,
+  "timeout_s": 12.0,
+  "nodes_used": 137444,
+  "wall_seconds": 4.2712,
+  "completed_full_root": true
+ },
+ "selected_action": "Qxd5",
+ "nodes": [
+  {
+   "action": "Qxd5",
+   "role": "candidate",
+   "score": 164,
+   "score_label": "+1.6",
+   "verdict": "selected",
+   "note": "Qxd5 comes out ahead by 2.3 pawns once the line settles",
+   "line": [
+    "Qxd5",
+    "exd5",
+    "Rxe7",
+    "bxa4"
+   ],
+   "children": [
+    {
+     "action": "exd5",
+     "role": "reply",
+     "score": 164,
+     "score_label": "+1.6",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "exd5",
+      "Rxe7",
+      "bxa4"
+     ],
+     "children": [
+      {
+       "action": "Rxe7 bxa4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Rce8",
+     "role": "reply",
+     "score": 304,
+     "score_label": "+3.0",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Rce8",
+      "Qh5",
+      "bxa4"
+     ],
+     "children": [
+      {
+       "action": "Qh5 bxa4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Rfe8",
+     "role": "reply",
+     "score": 304,
+     "score_label": "+3.0",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Rfe8",
+      "Qe4",
+      "bxa4"
+     ],
+     "children": [
+      {
+       "action": "Qe4 bxa4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "action": "Qd1",
+   "role": "candidate",
+   "score": 90,
+   "score_label": "+0.9",
+   "verdict": "survives",
+   "note": "roughly level after best play on both sides",
+   "line": [
+    "Qd1",
+    "Bc6",
+    "axb5",
+    "axb5"
+   ],
+   "children": [
+    {
+     "action": "Ba8",
+     "role": "reply",
+     "score": 90,
+     "score_label": "+0.9",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Ba8",
+      "axb5",
+      "axb5"
+     ],
+     "children": [
+      {
+       "action": "axb5 axb5",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Bb7",
+     "role": "reply",
+     "score": 90,
+     "score_label": "+0.9",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Bb7",
+      "axb5",
+      "axb5"
+     ],
+     "children": [
+      {
+       "action": "axb5 axb5",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Bc4",
+     "role": "reply",
+     "score": 90,
+     "score_label": "+0.9",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Bc4",
+      "axb5",
+      "axb5"
+     ],
+     "children": [
+      {
+       "action": "axb5 axb5",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "action": "Qc2",
+   "role": "candidate",
+   "score": -126,
+   "score_label": "-1.3",
+   "verdict": "survives",
+   "note": "the opponent's best reply keeps this branch 2.0 pawns worse",
+   "line": [
+    "Qc2",
+    "Bxf3",
+    "b4",
+    "bxa4"
+   ],
+   "children": [
+    {
+     "action": "Bxf3",
+     "role": "reply",
+     "score": -126,
+     "score_label": "-1.3",
+     "verdict": "refuted",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Bxf3",
+      "b4",
+      "bxa4"
+     ],
+     "children": [
+      {
+       "action": "b4 bxa4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Qg5+",
+     "role": "reply",
+     "score": -34,
+     "score_label": "-0.3",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Qg5+",
+      "Kf1",
+      "b4"
+     ],
+     "children": [
+      {
+       "action": "Kf1 b4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    },
+    {
+     "action": "Ba8",
+     "role": "reply",
+     "score": -18,
+     "score_label": "-0.2",
+     "verdict": "survives",
+     "note": "opponent's candidate resistance, scored from our side",
+     "line": [
+      "Ba8",
+      "h4",
+      "Qxh4"
+     ],
+     "children": [
+      {
+       "action": "h4 Qxh4",
+       "role": "continuation",
+       "note": "our follow-up on this reply's principal variation"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "action": "Nxd5",
+   "role": "candidate",
+   "score": -196,
+   "score_label": "-2.0",
+   "verdict": "refuted",
+   "note": "the opponent's best reply keeps this branch 1.7 pawns worse",
+   "line": [
+    "Nxd5",
+    "Rxc1+",
+    "Kg2",
+    "Qg5+"
+   ],
+   "children": []
+  },
+  {
+   "action": "Qa3",
+   "role": "candidate",
+   "score": -204,
+   "score_label": "-2.0",
+   "verdict": "refuted",
+   "note": "the opponent's best reply keeps this branch 1.7 pawns worse",
+   "line": [
+    "Qa3",
+    "b4",
+    "Nxd5",
+    "Rxc1+"
+   ],
+   "children": []
+  }
+ ],
+ "footnote": "Left pane: verbatim excerpts from the captured stream (probe600-03kkE.json), timestamps are wall-clock seconds from the start of the call; 12,974 output tokens, $0.0692 CLI cost equivalent. Right pane: deterministic bounded search (depth 4, quiescence 3, 300k nodes, 12s), scores in centipawns from White's perspective, #N = forced mate in N; branch notes are derived from search facts, not from a language model. Generated programmatically by reasontree-chess-artifact.",
+ "raw_trace": {
+  "label": "raw Haiku — same prompt, no tree, no caps",
+  "status": "completed",
+  "wall_seconds": 127.44,
+  "streamed_chars": 17594,
+  "output_tokens": 12974,
+  "cost_usd": 0.0692,
+  "excerpts": [
+   {
+    "t": 1.9,
+    "text": "Let me analyze this chess position. I need to find the single best move for White.\n\nFEN: 2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23\n\nLet me understand the board:\n```\n8: . . r . . r k .  (rank 8)\n7: . . . . q . p .  (rank 7)\n6: p . . . p . . p  (rank 6)\n5: . p . b . . . .  (rank 5)\n4: P . . . . . . .  ("
+   },
+   {
+    "t": 58.1,
+    "text": "Hmm, so Ne4 doesn't seem to trap the queen or win material immediately. Let me think about whether Ne4 improves White's position in some other way.\n\nAfter 1. Ne4, the knight is centralized and attacks the queen. The queen moves, and then what? I'm not sure this leads anywhere concrete.\n\nLet me go ba"
+   },
+   {
+    "t": 59.0,
+    "text": "Let me go back to considering Rxc8+. That seems like the most forcing move.\n\nAfter 1. Rxc8+ Qxc8, White has traded rooks. The position is roughly equal in material. But I should evaluate the resulting position more carefully. Is White better, worse, or equal?"
+   },
+   {
+    "t": 90.4,
+    "text": "But wait—the king can't be on g7 if there's a pawn there. Let me recheck the pawn structure from the position.\n\nLooking at rank 7: e7 has the queen, g7 has a pawn. So the king must move elsewhere after the rook check. The available squares are Kf7, Kh7, or Kh8. In each case, White follows with Rc7,"
+   },
+   {
+    "t": 93.2,
+    "text": "Let me examine whether there's a stronger initial move I've overlooked. The position warrants a closer look at other candidate moves before committing to the rook capture.\n\nWhat about Qxd5+? The queen takes the bishop with check, which forces the king to respond and wins material"
+   },
+   {
+    "t": 123.7,
+    "text": "So the move is c1c8 in UCI notation. Let me verify the board position once more to make sure I have the right setup before finalizing this answer.\n\nLooking at the full board: the black rook sits on c8 and black king on g8. The white rook is actually on e3, not c1 as I initially thought. Checking rank 1, there's a rook on c1 and the white"
+   }
+  ],
+  "markers": [
+   {
+    "t": 30,
+    "label": "the benchmark's 30s operational cap — nothing usable committed yet"
+   }
+  ],
+  "final": {
+   "predicted": "c1c8 (Rxc8+)",
+   "expected": "b3d5 (Qxd5!)",
+   "correct": false,
+   "wall_seconds": 127.44,
+   "note": "c1c8 is not even legal: White's own knight on c3 blocks the c-file"
+  }
+ }
+}

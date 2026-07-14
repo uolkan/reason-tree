@@ -102,6 +102,18 @@ For the six cases with matched final telemetry:
 
 On those measurable cases, the controller was 9.6x faster, used 19.8x fewer model output tokens, and was 4.65x cheaper. The ratio applies to six cases, not all ten; the other four raw calls have unknown final cost.
 
+### Fully uncapped probe: waiting longer buys a confident wrong answer
+
+A fair objection to any wall cap is "the model was about to answer." To close it, three rescue prompts were re-run on 2026-07-14 with no cost budget, a 16,000-token output allowance, and a 600-second wall, while the generation was streamed and archived verbatim ([`results/probe600/`](../benchmarks/chess/results/probe600/)). This time every call terminated on its own:
+
+| Puzzle | Finished at | Output tokens | Cost equivalent | Committed move | Verdict |
+| --- | ---: | ---: | ---: | --- | --- |
+| 03kkE | 127.4s | 12,974 | $0.0692 | `c1c8` | wrong — and illegal: White's own knight on c3 blocks the c-file |
+| 02Uju | 110.8s | 11,120 | $0.0599 | `f6h5` | legal but wrong |
+| 05lF8 | 191.3s | 19,730 | $0.1030 | `c7c4` | correct |
+
+So the failure is not starvation. Given unlimited time, raw Haiku converges — usually to a wrong move, once to an impossible one, each time after a confident closing justification ("captures the black rook with check, winning material"). The archived 03kkE stream shows the mechanism: a correct board parse at the start, then circular candidate hopping ("Let me go back to considering Rxc8+"), a board-state hallucination ("wait — the king can't be on g7 if there's a pawn there"), and a final commitment whose verification step repeats the hallucination instead of checking it. On the one puzzle it did solve, the raw call took 191 seconds and $0.103 against the controller's 11 seconds and $0.0146 for the same answer — about 17x slower and 7x more expensive. This is a three-case probe, not a benchmark; the archived streams are the evidence.
+
 There is one clean efficiency control where both methods completed correctly:
 
 | Puzzle 00lHu | Wall time | Output tokens | CLI cost equivalent |
@@ -203,6 +215,7 @@ A second, separate session re-verified this benchmark on 2026-07-13 without reus
 - The chess adapter is intentionally small and still missed 4/25 holdout cases.
 - Six searches returned a partial root frontier at the time cap; an iterative-deepening v2 should guarantee a complete shallower frontier before deepening.
 - The 10-case table is selected from paired holdout outcomes; it is a demo, not a separate accuracy estimate.
+- The uncapped 600-second probe covers three cases with one trial each; it bounds the "just wait longer" objection, it does not estimate an uncapped accuracy rate.
 - Broader AIME and ARC experiments in this repository did not show a general reasoning uplift over matched-compute controls.
 
 The public claim should therefore be:

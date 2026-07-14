@@ -84,3 +84,13 @@ If evidence is weak, say so. If no branch is good enough, return the best partia
 For a verified result, state what was executed or checked. A heuristic tree result is not verified merely because its state transitions were executable; name the scorer and its limits. For an unverified result, use the word `unverified` explicitly.
 
 Read `references/verification-patterns.md` when the task involves repeated signals, time zones, totals, code execution, or an underdetermined decision. Read `references/state-action-adapters.md` when the domain has enumerable actions or executable consequences. Use an installed controller when one matches.
+
+## Visual Tree Artifacts (on request)
+
+When the user asks to see, inspect, or share the reasoning tree, render it as a navigable HTML artifact instead of pasting a text dump. Every branch, counter-branch, score, and stop budget becomes an expandable node.
+
+- Chess/state positions: `reasontree-chess-artifact --fen <FEN> --output tree.html` (add `--raw-probe capture.json` to embed a captured raw-model stream side by side).
+- Any other adapter: emit the domain-neutral tree-spec JSON (see `reasontree/tree_artifact.py` docstring for the shape: nodes with `action`, `score`, `verdict`, `note`, `line`, `children`) and render with `reasontree-tree-artifact --spec spec.json --output tree.html`.
+- Use `--fragment` when publishing through a host that wraps the page shell for you.
+
+Keep artifact claims aligned with evidence: branch notes must come from search facts or be labeled unverified, and a raw-stream comparison pane must quote the captured stream verbatim.
