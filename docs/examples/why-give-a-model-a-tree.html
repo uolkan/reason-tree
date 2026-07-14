@@ -136,12 +136,17 @@ details.node>.dkids{border:1px solid var(--line);border-top:0;border-radius:0 0 
 .legend .sw.refline{border-top:2px solid color-mix(in srgb, var(--crit) 60%, var(--line))}
 .foot{margin-top:30px;font-size:12px;color:var(--ink-3);line-height:1.6}
 
-.prose{max-width:72ch;font-size:16.5px;line-height:1.7;color:var(--ink)}
-.prose p{margin:0 0 16px}
+.prose{max-width:72ch;font-size:16.5px;line-height:1.72;color:var(--ink)}
+.prose p{margin:0 0 17px}
 .prose .term{font-weight:650;color:var(--base)}
-section.blog{margin-top:64px}
+.prose code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.88em;background:var(--card-2);
+  border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+section.blog{margin-top:72px}
 .sec-eyebrow{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:6px}
-h2.sec{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:27px;margin:0 0 14px;text-wrap:balance;font-weight:600}
+h2.sec{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:28px;margin:0 0 8px;text-wrap:balance;font-weight:600}
+h3.sub{font-size:16px;font-weight:650;margin:26px 0 10px}
+.featrow{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 18px}
+.featrow .lead{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);align-self:center}
 .chessintro{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px}
 .chessintro .prose{flex:1 1 420px;min-width:300px}
 .qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;
@@ -150,8 +155,9 @@ h2.sec{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:27px;margi
   display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .qcard blockquote{margin:0;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;line-height:1.6;color:var(--ink-2);
   white-space:pre-wrap;word-break:break-word}
-.qcard .verdict-wrong{color:var(--crit);font-weight:700}
-.qcard .verdict-right{color:var(--rt);font-weight:700}
+.qcard .after{font-size:13.5px;color:var(--ink-2);margin:10px 0 0}
+.verdict-wrong{color:var(--crit);font-weight:700}
+.verdict-right{color:var(--rt);font-weight:700}
 .rangewrap{margin:18px 0 6px}
 .rangebar{position:relative;height:16px;border-radius:8px;background:linear-gradient(90deg,var(--rt-soft),var(--rt));
   border:1px solid var(--line)}
@@ -162,6 +168,36 @@ h2.sec{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:27px;margi
 .dotlabel{font-size:12px;color:var(--crit);font-weight:650;margin-top:2px}
 .codeblock{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;line-height:1.55;background:var(--card-2);
   border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;white-space:pre;margin:14px 0}
+/* collision timeline */
+.tl{margin:18px 0 8px}
+.tl .tl-day{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.tl .tl-track{position:relative;height:64px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.tl .tl-grid{position:absolute;inset:0;display:flex}
+.tl .tl-grid i{flex:1;border-right:1px dashed var(--line);opacity:.6}
+.tl .block{position:absolute;height:24px;border-radius:6px;font-size:11.5px;font-weight:650;display:flex;align-items:center;
+  padding:0 10px;white-space:nowrap;overflow:hidden}
+.tl .block.deploy{top:4px;left:8%;width:88%;background:var(--base-soft);color:var(--base);border:1.5px solid var(--base)}
+.tl .block.test{top:36px;left:54%;width:22%;background:var(--crit-soft);color:var(--crit);border:1.5px solid var(--crit)}
+.tl .tl-hours{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:6px;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.tl .collide{font-size:12px;color:var(--crit);font-weight:650;margin-top:6px}
+/* comparison */
+.methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:16px 0}
+.method{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.method .m-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.method .m-year{font-size:11px;color:var(--ink-3);font-weight:600;margin-left:6px}
+.method p{margin:0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.method .m-diff{margin-top:8px;font-size:12.5px;color:var(--ink)}
+.method .m-diff b{color:var(--rt)}
+.cmp-tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);margin:16px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05)}
+table.cmp{border-collapse:collapse;width:100%;font-size:13.5px;min-width:660px}
+table.cmp th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:left;font-weight:700;
+  padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.cmp td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+table.cmp tr:last-child td{border-bottom:0}
+table.cmp td.num{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.cmp tr.ours td{background:var(--rt-soft)}
 .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px 12px}
 .stat .k{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:650}
@@ -200,30 +236,50 @@ h2.sec{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:27px;margi
     (<span class="term">bounded search</span>) decides when to stop. Wherever a claim can be checked
     mechanically, a <span class="term">verifier</span> — real executed code, not another opinion — gets the
     final word. Only then does the language model speak: one short call to explain the branch that survived.</p>
-    <p>The result is reasoning you can open up and inspect — every alternative that was considered, every
-    counter-argument, every score — instead of a wall of text you have to take on faith. Below are three
-    real, captured experiments: a chess puzzle, an everyday probability question, and a debugging session.</p>
+    <p>Below are four real, captured experiments — a chess puzzle, a probability question, a debugging
+    session, and a business decision. Each one exercises a <em>different</em> part of the tree, so along the
+    way you'll see which specific feature earns its keep: executable states, verifiers, scoring, or the
+    adversarial pushback. At the end, we place ReasonTree honestly among its research ancestors — Tree of
+    Thoughts, Monte Carlo Tree Search, and friends — including a small head-to-head we ran for this page.</p>
   </div>
 </section>
 
 <section class="blog">
-  <div class="sec-eyebrow">Showcase 1 · strategy under pressure</div>
+  <div class="sec-eyebrow">Case 1 · strategy under pressure</div>
   <h2 class="sec">A chess puzzle, watched from the inside</h2>
+  <div class="featrow"><span class="lead">ReasonTree features at work</span><span class="chip info"><span class="dot"></span>executable state</span><span class="chip info"><span class="dot"></span>adversarial reply</span><span class="chip info"><span class="dot"></span>bounded budget</span></div>
   <div class="chessintro">
     <div class="prose">
-      <p>Chess is the perfect microscope for this, because the answer is mechanically checkable — nobody has
-      to argue about whether a move works. We gave Claude Haiku, a fast and inexpensive model, a rated
-      tactics puzzle (Lichess 1809) with <em>no</em> time limit and <em>no</em> budget limit, and recorded
-      every word of its thinking. What you'll see in the first panel is real and unedited: it starts out
-      organized, reads the board correctly, then begins to circle. It revisits the same candidate move,
-      "re-checks" the board and mis-remembers it, and after 127 seconds commits — confidently — to a move
-      that is not just wrong but <em>illegal</em>: its own knight is standing in the way.</p>
-      <p>The second panel is the same model inside ReasonTree. The controller lists every legal move on a
-      real board, plays each one out, lets the opponent answer with its strongest reply, scores the
-      outcomes, and selects <strong>Qxd5</strong> — the correct move — in about four seconds. Click any
-      branch to see the counter-moves it survived. On the full frozen 25-puzzle benchmark this gap is not a
-      one-off: raw Haiku solved <strong>1 of 25</strong> under a 30-second operational cap, the bounded tree
-      solved <strong>21 of 25</strong>.</p>
+      <p>First, what is this task? A chess tactics puzzle is a position from a real game where exactly one
+      move wins decisively — every alternative lets the opponent escape. Puzzle sites rate them by how often
+      humans solve them; this one is rated 1809, roughly "strong club player" territory. There is nothing to
+      debate and nothing to interpret: a move either works against the opponent's best defense or it doesn't,
+      which is exactly why we use chess as the microscope. Nobody can argue with the scoreboard.</p>
+      <p>Now think about what answering this requires from a model that can only write words. To evaluate one
+      candidate move it must <em>imagine</em> the move, imagine the opponent's best answer, imagine its own
+      follow-up — while keeping all thirty-two pieces straight, in prose, across every line it explores. Each
+      imagined move changes the position; each new candidate means rewinding to the original position from
+      memory. The captured stream in the first panel shows what that does in practice. Haiku starts out
+      impressively organized — it reads the position correctly and lists ideas. Then the drift begins: it
+      circles back to the same candidate a third time, "double-checks" the board and misremembers it
+      (<em>"wait — the king can't be on g7 if there's a pawn there"</em> — it could, there wasn't), and at
+      127 seconds it commits, politely and confidently, to a move that is not merely wrong but
+      <strong>illegal</strong> — its own knight is standing on the path. No time limit was in play; we let it
+      run as long as it wanted.</p>
+      <p>The second panel is the same model inside ReasonTree, and the difference is not effort — it's
+      plumbing. The controller never <em>remembers</em> the board; it <em>computes</em> it. Every legal move is
+      enumerated by code, each one is played on a real copy of the position, and for each, the opponent
+      answers with <em>its</em> best move — what game programmers call an
+      <span class="term">adversarial search</span> (four levels deep here; the classic
+      <span class="term">negamax</span> algorithm, for the technically curious). Positions are scored by
+      checkmate and material, a 12-second budget caps the work, and the winning branch — <strong>Qxd5</strong>,
+      a queen sacrifice — surfaces in about four seconds. Click any branch below: the counter-moves it had to
+      survive are all there.</p>
+      <p>On the full frozen 25-puzzle benchmark this is not a one-off: raw Haiku solved <strong>1 of 25</strong>
+      under a 30-second operational cap; the tree solved <strong>21 of 25</strong>. And the lesson travels
+      beyond chess: whenever a problem has precise rules and a changing state — a spreadsheet, a database, a
+      codebase, a schedule — "what happens if" can be <em>computed</em> instead of imagined. That single swap
+      is where most of the gain lives.</p>
     </div>
     <figure class="board" role="img"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 390 390" width="340" height="340"><desc><pre>. . r . . r k .
 . . . . q . p .
@@ -257,22 +313,33 @@ Looking at rank 7: e7 has the queen, g7 has a pawn. So the king must move elsewh
 
 What about Qxd5+? The queen takes the bishop with check, which forces the king to respond and wins material <span class="ellipsis">&hellip;</span></p></div><div><span class="tick">t = 123.7s</span><p>So the move is c1c8 in UCI notation. Let me verify the board position once more to make sure I have the right setup before finalizing this answer.
 
-Looking at the full board: the black rook sits on c8 and black king on g8. The white rook is actually on e3, not c1 as I initially thought. Checking rank 1, there&#x27;s a rook on c1 and the white <span class="ellipsis">&hellip;</span></p></div><div><hr class="cut"><span class="cutlabel">t = 127.44s &mdash; finally commits to c1c8 (Rxc8+) — wrong (expected b3d5 (Qxd5!)) &mdash; c1c8 is not even legal: White&#x27;s own knight on c3 blocks the c-file</span></div></div></div></section><section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span><span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div><div class="pane-b"><pre class="state">FEN: 2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23</pre><div class="budget"><span class="chip mut">depth: 4</span><span class="chip mut">max nodes: 300000</span><span class="chip mut">timeout s: 12.0</span><span class="chip mut">nodes used: 137444</span><span class="chip mut">wall seconds: 4.6829</span><span class="chip mut">completed full root: True</span></div><div class="controls"><button type="button" data-expand="1">Expand all</button><button type="button" data-expand="0">Collapse all</button></div><div class="htree-scroll"><div class="htree"><div class="brow open" data-collapsed="0"><div class="ncard root"><div class="n-top"><span class="n-act">White to move</span><span class="n-role">state</span></div></div><div class="stub"></div><ul class="kids"><li class="sel"><div class="brow sel open" data-collapsed="0"><div class="ncard v-selected toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Qxd5</span><span class="n-role">candidate</span><span class="chip ok"><span class="dot"></span>selected</span><span class="n-score"><span class="sbar"><i style="width:54%;background:var(--rt)"></i></span><span class="n-sval">+1.6</span></span></div><div class="n-note">Qxd5 comes out ahead by 2.3 pawns once the line settles</div><div class="n-line">line: <b>Qxd5 exd5 Rxe7 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">exd5</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:54%;background:var(--rt)"></i></span><span class="n-sval">+1.6</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>exd5 Rxe7 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Rxe7 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Rce8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:100%;background:var(--rt)"></i></span><span class="n-sval">+3.0</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Rce8 Qh5 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Qh5 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Rfe8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:100%;background:var(--rt)"></i></span><span class="n-sval">+3.0</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Rfe8 Qe4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Qe4 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class=""><div class="brow" data-collapsed="1"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="false"><div class="n-top"><span class="n-act">Qd1</span><span class="n-role">candidate</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">roughly level after best play on both sides</div><div class="n-line">line: <b>Qd1 Bc6 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Ba8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Ba8 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bb7</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bb7 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bc4</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bc4 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class=""><div class="brow" data-collapsed="1"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="false"><div class="n-top"><span class="n-act">Qc2</span><span class="n-role">candidate</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:41%;background:var(--crit)"></i></span><span class="n-sval">-1.3</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 2.0 pawns worse</div><div class="n-line">line: <b>Qc2 Bxf3 b4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class="ref"><div class="brow ref open" data-collapsed="0"><div class="ncard v-refuted toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bxf3</span><span class="n-role">reply</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:41%;background:var(--crit)"></i></span><span class="n-sval">-1.3</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bxf3 b4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">b4 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Qg5+</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:11%;background:var(--crit)"></i></span><span class="n-sval">-0.3</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Qg5+ Kf1 b4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Kf1 b4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Ba8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:6%;background:var(--crit)"></i></span><span class="n-sval">-0.2</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Ba8 h4 Qxh4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">h4 Qxh4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Nxd5</span><span class="n-role">candidate</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:64%;background:var(--crit)"></i></span><span class="n-sval">-2.0</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 1.7 pawns worse</div><div class="n-line">line: <b>Nxd5 Rxc1+ Kg2 Qg5+</b></div></div></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Qa3</span><span class="n-role">candidate</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:67%;background:var(--crit)"></i></span><span class="n-sval">-2.0</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 1.7 pawns worse</div><div class="n-line">line: <b>Qa3 b4 Nxd5 Rxc1+</b></div></div></div></li></ul></div></div></div><div class="legend"><span class="li"><span class="sw selline"></span>selected path</span><span class="li"><span class="sw survline"></span>surviving branch</span><span class="li"><span class="sw refline"></span>refuted branch</span><span class="li">click a node to open its counter-branches</span></div><div class="verdictline">Controller selection: <b>Qxd5</b> &mdash; the branch that survives the opponent&rsquo;s strongest reply within the budget.</div></div></section></div>
+Looking at the full board: the black rook sits on c8 and black king on g8. The white rook is actually on e3, not c1 as I initially thought. Checking rank 1, there&#x27;s a rook on c1 and the white <span class="ellipsis">&hellip;</span></p></div><div><hr class="cut"><span class="cutlabel">t = 127.44s &mdash; finally commits to c1c8 (Rxc8+) — wrong (expected b3d5 (Qxd5!)) &mdash; c1c8 is not even legal: White&#x27;s own knight on c3 blocks the c-file</span></div></div></div></section><section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span><span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div><div class="pane-b"><pre class="state">FEN: 2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23</pre><div class="budget"><span class="chip mut">depth: 4</span><span class="chip mut">max nodes: 300000</span><span class="chip mut">timeout s: 12.0</span><span class="chip mut">nodes used: 137444</span><span class="chip mut">wall seconds: 4.5892</span><span class="chip mut">completed full root: True</span></div><div class="controls"><button type="button" data-expand="1">Expand all</button><button type="button" data-expand="0">Collapse all</button></div><div class="htree-scroll"><div class="htree"><div class="brow open" data-collapsed="0"><div class="ncard root"><div class="n-top"><span class="n-act">White to move</span><span class="n-role">state</span></div></div><div class="stub"></div><ul class="kids"><li class="sel"><div class="brow sel open" data-collapsed="0"><div class="ncard v-selected toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Qxd5</span><span class="n-role">candidate</span><span class="chip ok"><span class="dot"></span>selected</span><span class="n-score"><span class="sbar"><i style="width:54%;background:var(--rt)"></i></span><span class="n-sval">+1.6</span></span></div><div class="n-note">Qxd5 comes out ahead by 2.3 pawns once the line settles</div><div class="n-line">line: <b>Qxd5 exd5 Rxe7 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">exd5</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:54%;background:var(--rt)"></i></span><span class="n-sval">+1.6</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>exd5 Rxe7 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Rxe7 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Rce8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:100%;background:var(--rt)"></i></span><span class="n-sval">+3.0</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Rce8 Qh5 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Qh5 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Rfe8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:100%;background:var(--rt)"></i></span><span class="n-sval">+3.0</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Rfe8 Qe4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Qe4 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class=""><div class="brow" data-collapsed="1"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="false"><div class="n-top"><span class="n-act">Qd1</span><span class="n-role">candidate</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">roughly level after best play on both sides</div><div class="n-line">line: <b>Qd1 Bc6 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Ba8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Ba8 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bb7</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bb7 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bc4</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:30%;background:var(--rt)"></i></span><span class="n-sval">+0.9</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bc4 axb5 axb5</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">axb5 axb5</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class=""><div class="brow" data-collapsed="1"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="false"><div class="n-top"><span class="n-act">Qc2</span><span class="n-role">candidate</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:41%;background:var(--crit)"></i></span><span class="n-sval">-1.3</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 2.0 pawns worse</div><div class="n-line">line: <b>Qc2 Bxf3 b4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class="ref"><div class="brow ref open" data-collapsed="0"><div class="ncard v-refuted toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Bxf3</span><span class="n-role">reply</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:41%;background:var(--crit)"></i></span><span class="n-sval">-1.3</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Bxf3 b4 bxa4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">b4 bxa4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Qg5+</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:11%;background:var(--crit)"></i></span><span class="n-sval">-0.3</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Qg5+ Kf1 b4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">Kf1 b4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li><li class=""><div class="brow open" data-collapsed="0"><div class="ncard v-survives toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Ba8</span><span class="n-role">reply</span><span class="chip info"><span class="dot"></span>survives</span><span class="n-score"><span class="sbar"><i style="width:6%;background:var(--crit)"></i></span><span class="n-sval">-0.2</span></span></div><div class="n-note">opponent&#x27;s candidate resistance, scored from our side</div><div class="n-line">line: <b>Ba8 h4 Qxh4</b></div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">h4 Qxh4</span><span class="n-role">continuation</span></div><div class="n-note">our follow-up on this reply&#x27;s principal variation</div></div></div></li></ul></div></li></ul></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Nxd5</span><span class="n-role">candidate</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:64%;background:var(--crit)"></i></span><span class="n-sval">-2.0</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 1.7 pawns worse</div><div class="n-line">line: <b>Nxd5 Rxc1+ Kg2 Qg5+</b></div></div></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Qa3</span><span class="n-role">candidate</span><span class="chip bad"><span class="dot"></span>refuted</span><span class="n-score"><span class="sbar"><i style="width:67%;background:var(--crit)"></i></span><span class="n-sval">-2.0</span></span></div><div class="n-note">the opponent&#x27;s best reply keeps this branch 1.7 pawns worse</div><div class="n-line">line: <b>Qa3 b4 Nxd5 Rxc1+</b></div></div></div></li></ul></div></div></div><div class="legend"><span class="li"><span class="sw selline"></span>selected path</span><span class="li"><span class="sw survline"></span>surviving branch</span><span class="li"><span class="sw refline"></span>refuted branch</span><span class="li">click a node to open its counter-branches</span></div><div class="verdictline">Controller selection: <b>Qxd5</b> &mdash; the branch that survives the opponent&rsquo;s strongest reply within the budget.</div></div></section></div>
 </section>
 
 <section class="blog">
-  <div class="sec-eyebrow">Showcase 2 · everyday decisions</div>
-  <h2 class="sec">Two alarms, one email — how sure are we?</h2>
+  <div class="sec-eyebrow">Case 2 · everyday statistics</div>
+  <h2 class="sec">Two alarms, one email — how sure are we, exactly?</h2>
+  <div class="featrow"><span class="lead">ReasonTree features at work</span><span class="chip info"><span class="dot"></span>verifier computes what&#x27;s knowable</span><span class="chip info"><span class="dot"></span>refusing false precision (the gap rule)</span><span class="chip info"><span class="dot"></span>branching makes assumptions visible</span></div>
   <div class="prose">
-    <p>Here's a situation with no chessboard in sight. Your company's two phishing scanners both flag the
-    same email. Each catches 90% of phishing and false-alarms on 5% of clean mail; about 1% of all mail is
-    phishing. The security lead asks: <em>what's the exact probability this one is phishing?</em>
-    The same logic applies anywhere two signals agree — two medical tests, two smoke detectors, two reviewers
-    who studied the same textbook. There's a catch hiding in the fine print: both scanners come from the same
-    vendor and share code and training data. When two witnesses learned from the same source, their agreement
-    counts for less — and by exactly how much, <em>nobody knows without measuring it</em>.</p>
-    <p>Asked raw, Haiku actually noticed the trap mid-thought — and then talked itself out of its own
-    caution, because the question demanded a single number:</p>
+    <p>No chessboard here — this is the kind of question that lands in a Slack channel. A company's mail
+    system sees about 1 phishing message per 100. It runs two phishing scanners. Each scanner, measured on
+    its own, catches 90% of phishing emails and false-alarms on 5% of legitimate ones. This morning,
+    <em>both</em> scanners flagged the same message, and the security lead asks the natural question:
+    <em>"Okay — what's the probability this one is actually phishing?"</em> To be precise about what's being
+    asked: of all the messages that ever get double-flagged, what fraction are truly phishing? Statisticians
+    call this the <span class="term">posterior probability</span>; everyone else calls it "how sure are we."</p>
+    <p>There is a textbook way to compute it, and it's genuinely tempting. Phishing is rare (1 in 100), so
+    even a good scanner cries wolf a lot — that's the famous <span class="term">base-rate trap</span>. But
+    two <em>independent</em> alarms fix that: the odds that two unrelated scanners both false-alarm on the
+    same innocent email are tiny (5% of 5%). Run the arithmetic — <span class="term">Bayes' theorem</span> —
+    and out comes a satisfying <strong>76.6%</strong>. One catch. That word <em>independent</em>. These two
+    scanners come from the same vendor and share code and training data. They are two witnesses who went to
+    the same school and read the same books: when one is fooled, the other tends to be fooled by the very
+    same trick. How much does their agreement really add, then? Here is the uncomfortable truth: <em>the
+    numbers given do not say.</em> Nobody has measured how often the two scanners fail together, and no
+    amount of cleverness can conjure that missing measurement out of thin air.</p>
+    <p>Watch what the raw model does with this. Midway through its thinking, it spots the trap — genuinely,
+    in its own words:</p>
   </div>
   <div class="qcard">
     <div class="who">raw haiku, thinking out loud · t = 21.0s
@@ -287,19 +354,40 @@ Looking at the full board: the black rook sits on c8 and black king on g8. The w
 Justification: Using Bayes&#x27; theorem: P(phishing | both flag) = (0.9² × 0.01) / (0.9² × 0.01 + 0.05² × 0.99) = 0.0081 / 0.010575 ≈ 77%.
 
 Critical limitation: This assumes the scanner errors are independent. Since both scanners share code and training data, their errors are positively correlated—if one makes a false positive, the other likely will too. This correlation means the true probability is lower than 77%. Without m &hellip;</blockquote>
-    <p style="font-size:13.5px;color:var(--ink-2);margin:10px 0 0">It committed to
-    <span class="verdict-wrong">77%</span> — the textbook number that silently assumes the scanners fail
-    independently — and even guessed a direction ("the true probability is lower") that the facts don't
-    support. Cost of the confident answer: 47.43s,
-    4407 tokens, $0.0264.</p>
+    <p class="after">The question demanded one number, so it delivered one:
+    <span class="verdict-wrong">77%</span> — the textbook figure that silently assumes the two scanners fail
+    independently, the very assumption it had just doubted. It even guessed a direction ("the true
+    probability is lower"), which the facts don't support either. Cost of the confident answer:
+    47.43s, 4407 tokens,
+    $0.0264. This is the single-stream weakness in its purest form:
+    <em>noticing</em> a flaw is possible, but nothing in the stream <em>forces</em> the flaw to change the
+    answer.</p>
   </div>
-  <div class="prose"><p>ReasonTree treats "assume independence" as just one branch — and sends the question
-  to a verifier that computes, exactly, every probability consistent with the stated facts. The honest
-  answer turns out to be a <em>range</em>, and it is enormous:</p></div>
+  <div class="prose">
+    <p>ReasonTree's structure changes who is allowed to have the last word. "Assume independence and
+    multiply" isn't the method here — it's just <em>one branch</em>, sitting next to a rival branch that asks:
+    what do the stated facts actually pin down? That second branch goes to a
+    <span class="term">verifier</span> — a small piece of exact mathematics (bounds under unknown
+    dependence, for the technical reader) that computes <em>every</em> probability consistent with the given
+    facts. The answer it returns is not a number. It's a range, and the range is enormous:</p>
+  </div>
   <div class="rangewrap">
     <div class="rangebar"><span class="dot" style="left:72.9%"></span></div>
     <div class="rangelabels"><span>13.9%</span><span>every value in this range fits the given facts</span><span>100%</span></div>
     <div class="dotlabel" style="margin-left:60%">&uarr; 76.6% — the tempting "textbook" number is just one unproven point</div>
+  </div>
+  <div class="prose">
+    <p>Both ends of that range are real possibilities, and each has a plain-English story. The bottom
+    (<strong>13.9%</strong>): if the scanners' mistakes overlap almost completely, the second flag adds
+    nearly nothing — you effectively have one scanner wearing two badges, and one flag on a rare event
+    mostly means "false alarm." The top (<strong>100%</strong>): if their false alarms happen never to
+    coincide, then a double flag is practically proof. Between those extremes, <em>any</em> value fits the
+    facts. So the only honest answer to "give me the exact probability" is:
+    <span class="term">underdetermined</span> — you cannot know from this data, and here is precisely the
+    measurement that would settle it (how often do both scanners flag the same legitimate email?). ReasonTree
+    calls this the <em>gap rule</em>: when two fact-compatible worlds disagree, name the gap instead of
+    picking a world. That refusal is a feature. A wrong-but-confident 77% could justify auto-deleting
+    customer email; "between 14% and 100%, and here's what to measure" leads somewhere useful.</p>
   </div>
   <div class="stack" style="margin-top:16px"><section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span><span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div><div class="pane-b"><div class="budget"><span class="chip mut">verifier: exact bound computation</span><span class="chip mut">wall seconds: 14.8</span><span class="chip mut">model calls: 1</span></div><div class="controls"><button type="button" data-expand="1">Expand all</button><button type="button" data-expand="0">Collapse all</button></div><div class="htree-scroll"><div class="htree"><div class="brow open" data-collapsed="0"><div class="ncard root"><div class="n-top"><span class="n-act">Both scanners flagged it</span><span class="n-role">state</span></div></div><div class="stub"></div><ul class="kids"><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Trust the textbook math</span><span class="n-role">branch</span><span class="chip bad"><span class="dot"></span>refuted</span></div><div class="n-note">Bayes&#x27; theorem with independent errors gives 76.6% — but independence is an assumption, not a fact. These scanners share code and training data.</div></div></div></li><li class="sel"><div class="brow sel open" data-collapsed="0"><div class="ncard v-selected toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Ask what the facts actually pin down</span><span class="n-role">branch</span><span class="chip ok"><span class="dot"></span>selected</span></div><div class="n-note">A dependence-bounds verifier computes every probability consistent with the stated facts: anywhere from 13.9% to 100%. One exact number is mathematically unknowable from this data.</div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">name the missing measurement</span><span class="n-role">continuation</span></div><div class="n-note">How often do both scanners flag the same legitimate email? Measure that, and the range collapses to a real answer.</div></div></div></li></ul></div></li></ul></div></div></div><div class="legend"><span class="li"><span class="sw selline"></span>selected path</span><span class="li"><span class="sw survline"></span>surviving branch</span><span class="li"><span class="sw refline"></span>refuted branch</span><span class="li">click a node to open its counter-branches</span></div><div class="verdictline">Controller selection: <b>report the honest range, name the missing fact</b> &mdash; the branch that survived the pushback, and it tells you which measurement would settle the question.</div></div></section></div>
   <div class="qcard">
@@ -309,20 +397,23 @@ Critical limitation: This assumes the scanner errors are independent. Since both
 - Verified range: 13.9% to 100%.
 - Independence scenario: 76.6%, explicitly labeled unproven.
 - Missing measurement: joint error rates between the two scanners.</blockquote>
-    <p style="font-size:13.5px;color:var(--ink-2);margin:10px 0 0">Three times faster than the raw attempt,
-    and — more importantly — <span class="verdict-right">it refuses the false precision</span> and tells you
-    exactly which measurement would close the question. That refusal is a feature, not a failure.</p>
+    <p class="after">Three times faster than the raw attempt, and — more importantly —
+    <span class="verdict-right">it refuses the false precision</span> and names the fact that would close the
+    question. The same trap, by the way, is everywhere once you see it: two medical tests processed by the
+    same lab, two references who heard the story from the same person, two AI models trained on the same
+    data, two auditors using the same checklist. Agreement feels like confirmation; without independence,
+    it's often just an echo.</p>
   </div>
 </section>
 
 <section class="blog">
-  <div class="sec-eyebrow">Showcase 3 · coding</div>
+  <div class="sec-eyebrow">Case 3 · debugging</div>
   <h2 class="sec">The bug that wasn't where it looked</h2>
+  <div class="featrow"><span class="lead">ReasonTree features at work</span><span class="chip info"><span class="dot"></span>hypotheses as branches</span><span class="chip info"><span class="dot"></span>verifier executes the code</span><span class="chip info"><span class="dot"></span>fix verified, not recommended</span></div>
   <div class="prose">
-    <p>A Python service has a nasty symptom: one user changes their timeout, and suddenly <em>every</em>
-    user has that timeout. Here's the code — and note that it contains a famous-looking red herring, the
-    mutable default argument <code>overrides={}</code>, which every code reviewer has been trained to
-    pounce on:</p>
+    <p>A Python service ships a small feature: every user can set their own request timeout. One day a
+    customer sets theirs to 60 seconds — and suddenly <em>every</em> user's timeout is 60. Settings are
+    leaking across users who have never touched them. Here's the entire relevant code:</p>
   </div>
   <div class="codeblock">import functools
 
@@ -337,16 +428,33 @@ def apply_user_settings(user_prefs):
     cfg[&quot;timeout&quot;] = user_prefs.get(&quot;timeout&quot;, cfg[&quot;timeout&quot;])
     return cfg</div>
   <div class="prose">
-    <p>Credit where due: asked raw, Haiku identified the real culprit correctly this time
+    <p>Two things in this snippet deserve a plain-language introduction. <code>@functools.lru_cache()</code>
+    is Python's "remember the answer" sticker: the first time <code>get_config("prod")</code> runs, the result
+    is stored; every later call skips the work and returns the stored result. Useful — but note the subtlety:
+    it remembers <em>the object itself</em>, not a photocopy. Every caller receives the <em>same</em>
+    dictionary. The second thing is <code>overrides={}</code> — a <span class="term">mutable default
+    argument</span>, one of Python's most famous gotchas, the thing every code reviewer has been trained to
+    pounce on the moment they see it. It <em>looks</em> guilty. That's precisely what makes this case
+    interesting: there's a well-known suspect standing right next to the actual culprit.</p>
+    <p>Credit where due: asked raw, Haiku correctly blamed the cache this time
     (19.64s, 1758 tokens,
-    $0.0133). But its answer is still just a <em>claim</em> — a plausible
-    story about code it never ran. ReasonTree's version of this investigation is different in kind, not just
-    in speed: each suspect becomes a branch, and the verifier <em>executes the actual program</em>. The real
-    cause is confirmed by reproducing the symptom; the decoy is cleared by direct observation; and the fix
-    isn't recommended — it's <em>re-run and watched working</em>. Total: under a millisecond of code
-    execution, one short model call to write it up, 7.32s and
-    $0.007 end to end — about half the time and cost of the raw
-    attempt, with proof attached.</p>
+    $0.0133). But look at what that answer <em>is</em>: a plausible story
+    about code it never ran. You'd still have to verify it yourself before shipping the fix — and if it had
+    picked the decoy instead, the answer would have read exactly as confident.</p>
+    <p>ReasonTree treats a debugging session as hypothesis testing. Each suspect becomes a branch, and the
+    <span class="term">verifier executes the actual program</span>. Branch one — "the cache hands out one
+    shared dict" — is confirmed by reproduction: run the code, watch user 2 inherit user 1's timeout, observe
+    that <code>get_config("prod")</code> really does return the identical object twice. Branch two — the
+    famous decoy — is cleared by direct observation: after the failure, the default dict is still empty; it
+    was never touched. Then the fix branch: apply copy-on-return, re-run the same scenario, watch the symptom
+    disappear. The fix isn't <em>recommended</em>; it's <em>demonstrated</em>. All of the code execution took
+    under a millisecond; one short model call writes it up. Total:
+    7.32s and $0.007 — roughly half
+    the time and cost of the raw attempt, with proof attached instead of plausibility.</p>
+    <p>The pattern generalizes to most "how is this even possible?" bugs: settings that leak between users,
+    tests that pass alone and fail together, caches that serve stale data, "works on my machine." Wherever a
+    hypothesis can be turned into a few lines of executable check, the tree turns detective stories into
+    experiments.</p>
   </div>
   <div class="stack"><section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span><span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div><div class="pane-b"><div class="budget"><span class="chip mut">code executions: 3</span><span class="chip mut">verifier wall: under 1 ms</span><span class="chip mut">explain call wall seconds: 7.32</span><span class="chip mut">total cost: $0.0070</span></div><div class="controls"><button type="button" data-expand="1">Expand all</button><button type="button" data-expand="0">Collapse all</button></div><div class="htree-scroll"><div class="htree"><div class="brow open" data-collapsed="0"><div class="ncard root"><div class="n-top"><span class="n-act">User 2 inherits user 1&#x27;s timeout</span><span class="n-role">state</span></div></div><div class="stub"></div><ul class="kids"><li class="sel"><div class="brow sel open" data-collapsed="0"><div class="ncard v-selected toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">lru_cache hands out ONE shared dict</span><span class="n-role">hypothesis</span><span class="chip ok"><span class="dot"></span>selected</span></div><div class="n-note">Executed: get_config(&#x27;prod&#x27;) is get_config(&#x27;prod&#x27;) → True. After user 1 sets 60, user 2 reads 60. Symptom reproduced on the real code.</div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard v-survives"><div class="n-top"><span class="n-act">fix: return a copy</span><span class="n-role">continuation</span><span class="chip info"><span class="dot"></span>survives</span></div><div class="n-note">Re-ran the same scenario with dict(...) copy-on-return: user 2 reads 10 again. Symptom gone — the fix is verified, not assumed.</div></div></div></li></ul></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">the suspicious overrides={} default</span><span class="n-role">hypothesis</span><span class="chip bad"><span class="dot"></span>refuted</span></div><div class="n-note">Executed: after the failure, the default dict is still {} — it was never mutated. A classic decoy that looks guilty and isn&#x27;t.</div></div></div></li></ul></div></div></div><div class="legend"><span class="li"><span class="sw selline"></span>selected path</span><span class="li"><span class="sw survline"></span>surviving branch</span><span class="li"><span class="sw refline"></span>refuted branch</span><span class="li">click a node to open its counter-branches</span></div><div class="verdictline">Controller selection: <b>shared cached dict — fix by returning a copy</b> &mdash; confirmed by executing the real code; the decoy was cleared the same way.</div></div></section></div>
   <div class="qcard">
@@ -357,6 +465,87 @@ def apply_user_settings(user_prefs):
 Why Branch B is refuted: The mutable default argument `overrides={}` was never mutated, as directly observed in the execution evidence.
 
 Minimal fix: Return a copy of the cached dict from the cached function so each caller gets an independent mutable object: `return dict(get_settings())` or `return copy.copy(cached_result)`.</blockquote>
+  </div>
+</section>
+
+<section class="blog">
+  <div class="sec-eyebrow">Case 4 · decision making</div>
+  <h2 class="sec">Ship the fix now, or wait a week?</h2>
+  <div class="featrow"><span class="lead">ReasonTree features at work</span><span class="chip info"><span class="dot"></span>parallel advocate branches</span><span class="chip info"><span class="dot"></span>adversarial skeptic pass</span><span class="chip info"><span class="dot"></span>assumptions labeled, not hidden</span></div>
+  <div class="prose">
+    <p>Our last case has no verifier at all — no chess engine, no formula, no test suite can tell you the
+    right answer. That's deliberate: most real decisions live here, and it's important to see what a
+    reasoning tree can and cannot honestly do in this territory.</p>
+    <p>The setup: you advise a six-person B2B software startup with 40 customers. A bug is corrupting
+    non-English characters (ç, ö, 漢字…) in the data-export feature; two customers are affected. Option A: a
+    hotfix can ship tomorrow — but deploying it means <em>disabling every customer's data export for up to 24
+    hours, starting tomorrow morning</em>. Option B: wait for next week's scheduled maintenance window and fix
+    it with zero downtime. Sounds like a judgment call between speed and disruption — until you read the
+    account notes: one of the two affected customers is mid contract-renewal, worth 30% of the company's
+    revenue, and their procurement team runs a <em>data-export compliance test tomorrow afternoon</em> as part
+    of the renewal checklist. Now look again. Option A knocks out the very feature that customer will be
+    testing, during the very hours they'll be testing it:</p>
+  </div>
+  <div class="tl">
+    <div class="tl-day">Tomorrow</div>
+    <div class="tl-track">
+      <div class="tl-grid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="block deploy">Option A: all-customer export offline — "up to 24 hours"</div>
+      <div class="block test">⚠ renewal compliance test</div>
+    </div>
+    <div class="tl-hours"><span>6am</span><span>10am</span><span>2pm</span><span>6pm</span><span>10pm</span></div>
+    <div class="collide">The collision: the renewal customer tests data export while Option A has data export switched off.</div>
+  </div>
+  <div class="prose">
+    <p>To raw Haiku's credit, this time the single stream caught it — its very first step was to call the
+    customer and move the test out of the deployment window:</p>
+  </div>
+  <div class="qcard">
+    <div class="who">raw haiku, final answer (excerpt) · 28.9s ·
+      $0.0163
+      <span class="chip info"><span class="dot"></span>spotted the collision — this time</span></div>
+    <blockquote>Call the renewal customer today — Inform them directly of the bug, tomorrow&#x27;s maintenance window, and estimated restoration time (underpromise). Ask if they can run their compliance test before 7am or after the estimated restore time, and offer to have an engineer standing by during their test. This removes ambiguity and gives them ownership of the solution path.
+
+2. Test the hotfix tonight end-to-end — Validate the fix &hellip;</blockquote>
+    <p class="after">A genuinely good answer. But hold it next to Case 2 for a moment: the same model, on the
+    same day, <em>noticed</em> the independence trap and still answered "77%." A single stream <em>may</em>
+    catch the buried fact. Nothing makes it. Whether the collision surfaces depends on where the stream
+    happens to wander — and you only get one stream.</p>
+  </div>
+  <div class="prose">
+    <p>The tree makes the catch structural instead of lucky. Two <span class="term">advocate branches</span>
+    each argue one option as hard as they can — and are required to list the biggest risks of <em>their own</em>
+    plan against every stated fact. Then a <span class="term">skeptic pass</span> cross-examines both branches,
+    specifically hunting for facts that break them. In the captured run it found both of the things that
+    matter. Against Option B, the fatal one:</p>
+  </div>
+  <div class="qcard">
+    <div class="who">the skeptic node, cross-examining option B
+      <span class="chip bad"><span class="dot"></span>branch refuted by a stated fact</span></div>
+    <blockquote>If the test is tomorrow afternoon and the fix isn&#x27;t deployed until next week, the customer will encounter the bug during their renewal compliance test. This is not a negotiable reschedule—it&#x27;s a compliance checklist for a renewal decision. The bug discovery at that moment guarantees escalation and exactly the &quot;forced into Option A under duress&quot; scenario Branch B warns against. Waiting doesn&#x27;t avoid the crisis; it defers it to the worst possible time. &hellip;</blockquote>
+  </div>
+  <div class="prose"><p>And against Option A — subtler and easy to miss — the skeptic caught the plan
+  contradicting <em>its own numbers</em>:</p></div>
+  <div class="qcard">
+    <div class="who">the skeptic node, cross-examining option A
+      <span class="chip info"><span class="dot"></span>hidden assumption exposed</span></div>
+    <blockquote>A deployment that starts &quot;tomorrow morning&quot; and runs &quot;up to 24 hours&quot; does not have an afternoon window available for the test. The 4–6 hour estimate contradicts the stated &quot;up to 24 hours&quot; requirement. Branch A cannot have it both ways—either deployment finishes by afternoon (contradicting the stated scope), or export is still down during the test. &hellip;</blockquote>
+    <p class="after">The final recommendation (153.43s,
+    $0.0928): hotfix tomorrow, <em>but only sequenced around the test</em> — call
+    the customer first, verify the test can move, stage the deploy accordingly. Crucially, the answer ships
+    with a table of its own assumptions ("the test is movable on 12-hour notice") and unverifiable facts,
+    each labeled. Because no verifier exists for decisions, ReasonTree doesn't pretend one does: the output is
+    marked <span class="term">unverified</span> — an honest judgment, stress-tested, with its load-bearing
+    assumptions in plain view. That's the most a reasoning system can truthfully offer here, and it costs
+    about 6&times; the raw call — worth it when 30% of revenue rides on a scheduling detail, overkill for
+    picking lunch.</p>
+  </div>
+  <div class="stack"><section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span><span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div><div class="pane-b"><div class="budget"><span class="chip mut">branches: 2</span><span class="chip mut">skeptic pass: 1</span><span class="chip mut">wall seconds: 153.43</span><span class="chip mut">total cost: $0.0928</span></div><div class="controls"><button type="button" data-expand="1">Expand all</button><button type="button" data-expand="0">Collapse all</button></div><div class="htree-scroll"><div class="htree"><div class="brow open" data-collapsed="0"><div class="ncard root"><div class="n-top"><span class="n-act">Ship now or wait a week?</span><span class="n-role">state</span></div></div><div class="stub"></div><ul class="kids"><li class="sel"><div class="brow sel open" data-collapsed="0"><div class="ncard v-selected toggle" role="button" tabindex="0" aria-expanded="true"><div class="n-top"><span class="n-act">Option A: hotfix tomorrow</span><span class="n-role">branch</span><span class="chip ok"><span class="dot"></span>selected</span></div><div class="n-note">Survives cross-examination — but only after the skeptic exposed its hidden assumption: the plan works only if the customer&#x27;s test can actually move, which nobody has verified.</div><span class="caret" aria-hidden="true">&#9656;</span></div><div class="stub"></div><ul class="kids"><li class=""><div class="brow" data-collapsed="0"><div class="ncard"><div class="n-top"><span class="n-act">skeptic: your own numbers collide</span><span class="n-role">challenge</span></div><div class="n-note">“Up to 24 hours” starting tomorrow morning does not leave an afternoon window. Call the customer first; treat the test time as an assumption, not a fact.</div></div></div></li></ul></div></li><li class="ref"><div class="brow ref" data-collapsed="0"><div class="ncard v-refuted"><div class="n-top"><span class="n-act">Option B: wait for next week</span><span class="n-role">branch</span><span class="chip bad"><span class="dot"></span>refuted</span></div><div class="n-note">The renewal customer runs its compliance test on the broken export tomorrow afternoon. Waiting doesn&#x27;t avoid the crisis; it schedules the bug&#x27;s discovery for the worst possible moment.</div></div></div></li></ul></div></div></div><div class="legend"><span class="li"><span class="sw selline"></span>selected path</span><span class="li"><span class="sw survline"></span>surviving branch</span><span class="li"><span class="sw refline"></span>refuted branch</span><span class="li">click a node to open its counter-branches</span></div><div class="verdictline">Controller selection: <b>hotfix tomorrow — but only sequenced around the compliance test</b> &mdash; a judgment call, so it ships with its assumptions labeled instead of a proof.</div></div></section></div>
+  <div class="prose" style="margin-top:14px">
+    <p>The shape to remember: <em>any decision where dated facts can collide</em>. A kitchen renovation
+    scheduled just before a family event; switching payroll vendors the month of a tax deadline; accepting a
+    job offer whose start date quietly overlaps a signed obligation. One stream may notice. A tree with a
+    skeptic pass must check.</p>
   </div>
 </section>
 
@@ -372,9 +561,80 @@ Minimal fix: Return a copy of the cached dict from the cached function so each c
     tree in words, even with all legal moves listed, still failed the chess puzzles. The gain appears only
     when branches become executable — real states, real checks. Structure has to be in the machinery, not
     the phrasing.</p>
-    <p><b>Creative and judgment calls get branches, not proofs.</b> For brainstorming, product decisions, or
-    anything without a mechanical check, ReasonTree still lays out alternatives and counter-arguments — but
-    labels them <em>unverified</em> instead of dressing them up as certainty.</p>
+    <p><b>Judgment calls get scrutiny, not proofs.</b> Case 4 shows the ceiling: without a verifier, the tree
+    can force hidden facts into view and label assumptions, but it cannot certify the decision — and says so.</p>
+  </div>
+</section>
+
+<section class="blog">
+  <div class="sec-eyebrow">Standing on shoulders</div>
+  <h2 class="sec">How this relates to Tree of Thoughts, MCTS, and friends</h2>
+  <div class="prose">
+    <p>None of the individual ideas here are new, and it matters to say so plainly. Researchers have been
+    giving language models more structure for years, and ReasonTree borrows from most of them:</p>
+  </div>
+  <div class="methods">
+    <div class="method"><div class="m-name">Chain of Thought<span class="m-year">2022</span></div>
+      <p>Ask the model to think out loud before answering. The baseline everything else builds on.</p>
+      <p class="m-diff"><b>Shared:</b> nothing structural — this is the single stream all four cases start from.</p></div>
+    <div class="method"><div class="m-name">Self-Consistency<span class="m-year">2022</span></div>
+      <p>Ask the same question many times, take the majority answer. Wisdom of a crowd of one model.</p>
+      <p class="m-diff"><b>Difference:</b> votes measure agreement, not correctness — correlated errors win votes too (see Case 2).</p></div>
+    <div class="method"><div class="m-name">Tree of Thoughts<span class="m-year">2023</span></div>
+      <p>Branch into multiple partial "thoughts," have the model rate its own thoughts, search over the best ones.</p>
+      <p class="m-diff"><b>Shared:</b> branching, scoring, pruning. <b>Difference:</b> in ToT the model grades its own homework; in ReasonTree an executed check outranks any model opinion.</p></div>
+    <div class="method"><div class="m-name">Graph of Thoughts<span class="m-year">2023</span></div>
+      <p>Generalize the tree to a graph: branches can merge, loop, and refine each other.</p>
+      <p class="m-diff"><b>Difference:</b> richer topology, same self-evaluation. ReasonTree keeps the plain tree and spends the complexity budget on verification instead.</p></div>
+    <div class="method"><div class="m-name">Monte Carlo Tree Search<span class="m-year">AlphaGo era</span></div>
+      <p>The statistics-guided game search behind AlphaGo: simulate, score, expand the promising branches.</p>
+      <p class="m-diff"><b>Shared:</b> adversarial state-action search. <b>Difference:</b> our own experiments found visit-count MCTS cost 3&ndash;6&times; more with no quality gain at this scale — a small bounded search was enough.</p></div>
+    <div class="method"><div class="m-name">Reflexion / Self-Refine<span class="m-year">2023</span></div>
+      <p>Let the model criticize its own answer and try again, possibly across attempts.</p>
+      <p class="m-diff"><b>Shared:</b> the skeptic pass of Case 4 is kin. <b>Difference:</b> where a real check exists, ReasonTree replaces self-critique with execution.</p></div>
+  </div>
+  <div class="prose">
+    <p>So what is actually different? One design rule, applied stubbornly: <em>the model never gets the last
+    word on anything a machine can check.</em> There's a reason for that rule. A well-known study — Huang et
+    al., <em>"Large Language Models Cannot Self-Correct Reasoning Yet"</em> (arXiv&nbsp;2310.01798) — found
+    that when models review their own reasoning without external feedback, they fix wrong answers about as
+    often as they break right ones. Every method above that relies on the model evaluating its own thoughts
+    inherits that ceiling. ReasonTree's bet is to route around it: executable states and verifiers wherever
+    the domain allows (Cases 1&ndash;3), and where nothing can be executed (Case 4), honest labels instead of
+    borrowed confidence — plus two habits that are rarer than they should be: a hard compute budget on every
+    search, and the "underdetermined" output when facts genuinely don't pin down an answer.</p>
+    <p>We didn't just assert the difference — we ran a small version of the comparison. We built a one-level
+    Tree-of-Thoughts-style harness (three independent proposals, then one evaluate-and-vote call; our own
+    emulation, not the original authors' code) and pointed it at the same tasks, same model, no tools:</p>
+  </div>
+  <div class="cmp-tblwrap"><table class="cmp">
+    <thead><tr><th>Approach</th><th>Chess rescue puzzles (2)</th><th>The two-alarms trap</th><th class="num">Typical cost/case</th></tr></thead>
+    <tbody>
+      <tr><td><b>Raw Haiku</b> — one stream</td><td>0/2 — one illegal move, one wrong</td><td>committed to "77%" after doubting it</td><td class="num">$0.01&ndash;0.07 · up to minutes</td></tr>
+      <tr><td><b>"Think in branches" prompt</b></td><td>0/2 — both timed out at 90s</td><td>&mdash;</td><td class="num">&mdash;</td></tr>
+      <tr><td><b>ToT-style, propose&times;3 + vote</b></td><td>1/2 — voted for a refuted move on the other</td><td>named the right conclusion, then answered "15.4%" anyway</td><td class="num">$0.2232 · 263s</td></tr>
+      <tr class="ours"><td><b>ReasonTree</b> — tree + verifier</td><td>2/2 — in seconds, branches inspectable</td><td>verified range 13.9&ndash;100% + the missing measurement</td><td class="num">~$0.014 · 5&ndash;21s</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qcard">
+    <div class="who">the ToT-style vote on the two-alarms question
+      <span class="chip bad"><span class="dot"></span>the branches knew — the vote caved</span></div>
+    <blockquote>Proposal 2&#x27;s insight is important—the true answer depends on unknown correlation—but that argues for a range or a recommendation to measure, not a specific guess.
+
+FINAL ANSWER: 15.4%</blockquote>
+    <p class="after">This is the most instructive failure on the page. Branching <em>did</em> surface the
+    uncertainty — one proposal argued for a range. The vote even <em>agreed</em> with it in words. Then it
+    picked a number anyway, because nothing structural stopped it. Branches without a verifier are opinions
+    with better formatting.</p>
+  </div>
+  <div class="prose">
+    <p>Fairness requires the caveats: this is a tiny probe — two puzzles and one trap question, one model,
+    our own ToT emulation rather than the official implementation, single runs. A proper head-to-head against
+    the published Tree-of-Thoughts and Graph-of-Thoughts codebases, across many tasks and seeds, has not been
+    done — by us or, to our knowledge, by anyone, for the verifier-gated setup. It's the obvious next
+    experiment, and the repository is set up to run it. Until then, the claim we're comfortable making is
+    narrow and matches everything above: <em>structured branching helps a model surface doubts; only an
+    executed check reliably converts doubts into a different answer.</em></p>
   </div>
 </section>
 
@@ -385,24 +645,27 @@ Minimal fix: Return a copy of the cached dict from the cached function so each c
     <div class="stat"><div class="k">chess: raw haiku</div><div class="v b">1/25</div><div class="s">30s cap · frozen rated holdout</div></div>
     <div class="stat"><div class="k">chess: reasontree</div><div class="v g">21/25</div><div class="s">median 5.7s · same puzzles</div></div>
     <div class="stat"><div class="k">uncapped raw, 3 probes</div><div class="v r">1/3</div><div class="s">one answer was an illegal move</div></div>
-    <div class="stat"><div class="k">alerts: raw</div><div class="v r">\u201c77%\u201d</div><div class="s">false precision · 47s · $0.026</div></div>
+    <div class="stat"><div class="k">alerts: raw / tot-style</div><div class="v r">\u201c77%\u201d / \u201c15.4%\u201d</div><div class="s">two confident guesses at one unknowable number</div></div>
     <div class="stat"><div class="k">alerts: reasontree</div><div class="v g">13.9\u2013100%</div><div class="s">verified range · 14.8s</div></div>
     <div class="stat"><div class="k">bug hunt: reasontree</div><div class="v g">$0.007</div><div class="s">proven fix · 7.3s vs 19.6s raw</div></div>
+    <div class="stat"><div class="k">decision case</div><div class="v g">2 collisions</div><div class="s">surfaced + assumptions labeled · $0.093</div></div>
+    <div class="stat"><div class="k">tot-style chess</div><div class="v b">1/2</div><div class="s">~4 min and ~$0.20 per puzzle</div></div>
   </div>
   <div class="prose">
     <p>Everything here is reproducible: the frozen puzzle set, the captured thought streams, the verifier
-    code, and the renderer that generated this very page are all in the open-source repository —
-    <span class="mono">github.com/uolkan/reason-tree</span>.</p>
+    code, the comparison harness, and the renderer that generated this very page are all in the open-source
+    repository — <span class="mono">github.com/uolkan/reason-tree</span>.</p>
   </div>
 </section>
 
 <footer class="foot">
   Chess: Lichess open puzzle database (CC0), frozen 25-puzzle holdout rated 1809&ndash;1819; baseline Claude Haiku 4.5
-  via Claude Code CLI, tools disabled. Streams captured verbatim with timestamps; archived under
-  benchmarks/ in the repository. Scores in the chess tree are centipawns from White's perspective; branch notes are
-  derived from executed search facts, not from a language model. The alerts verifier computes exact posterior bounds
-  under unknown dependence (Fr&eacute;chet-style); the bug-hunt verifier executes the code under test. Generated
-  programmatically with reasontree-tree-artifact.
+  via Claude Code CLI, tools disabled, streams captured verbatim with timestamps and archived under benchmarks/ in the
+  repository. Chess tree scores are centipawns from White's perspective; #N = forced mate in N; branch notes derive
+  from executed search facts, not from a language model. The alerts verifier computes exact posterior bounds under
+  unknown dependence; the bug-hunt verifier executes the code under test; the decision case has no mechanical verifier
+  and is labeled accordingly. ToT-style = our one-level propose&times;3 + vote emulation, single runs. Method years are
+  the papers' arXiv debuts. Generated programmatically with reasontree-tree-artifact.
 </footer>
 
 </div>
