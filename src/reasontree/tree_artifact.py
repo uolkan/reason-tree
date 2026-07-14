@@ -3,34 +3,48 @@
 The input is a domain-neutral tree spec (plain dict / JSON), so any adapter
 can emit one. Nothing here knows about chess; ``chess_artifact.py`` is one
 producer. The output HTML has zero external dependencies (inline CSS/JS only),
-renders in light and dark themes, and keeps every branch inspectable through
-native ``<details>`` elements, so the tree is keyboard-navigable by default.
+renders in light and dark themes, and keeps every branch inspectable.
 
-Spec shape (all string fields are plain text; the renderer escapes them):
+Two layouts:
+
+- ``"layout": "horizontal"`` (default) — a left-to-right tree with drawn
+  connector lines. Line weight and color follow the branch verdict (the
+  selected path is bold, refuted branches thin), and every node with children
+  toggles open/closed on click or Enter/Space.
+- ``"layout": "vertical"`` — nested ``<details>`` cards, useful for deep
+  narrow trees.
+
+Spec shape (all string fields are plain text; the renderer escapes them —
+except ``board_svg``, which is inserted verbatim and must come from a trusted
+generator such as ``chess.svg.board``):
 
     {
       "title": "...",
       "task": "one-line task statement",
-      "state": "pre-rendered current state (monospace block)",
-      "budget": {"depth": 4, "max_nodes": 300000, "timeout_s": 12.0,
-                 "nodes_used": 52310, "wall_seconds": 4.37, "completed": true},
-      "selected_action": "Bxd5",
+      "layout": "horizontal",
+      "board_svg": "<svg .../>",           # optional rendered state diagram
+      "board_caption": "White to move · rated 1809",
+      "state": "monospace state block",     # optional textual state
+      "budget": {"depth": 4, "wall_seconds": 4.3, ...},
+      "selected_action": "Qxd5",
       "nodes": [
-        {"action": "Bxd5", "score": 880, "score_label": "+8.8",
+        {"action": "Qxd5", "score": 164, "score_label": "+1.6",
          "verdict": "selected" | "survives" | "refuted" | "pruned",
          "role": "candidate" | "reply" | "continuation",
          "note": "short branch thought",
-         "line": ["Bxd5", "exd5", "Rxe7"],
+         "line": ["Qxd5", "exd5", "Rxe7"],
          "children": [ ...same shape... ]},
-        ...
       ],
-      "raw_trace": {                      # optional comparison pane
-        "label": "raw haiku, same prompt",
-        "status": "timeout" | "budget_exhausted" | "completed",
-        "wall_seconds": 600.0,
-        "streamed_chars": 18342,
-        "excerpts": [{"t": 3.1, "text": "..."}, ...],
-        "unfinished": true
+      "raw_trace": {                        # optional comparison pane
+        "label": "raw haiku — same prompt",
+        "status": "completed" | "timeout" | "budget_exhausted",
+        "wall_seconds": 127.4, "streamed_chars": 17594,
+        "output_tokens": 12974, "cost_usd": 0.0692,
+        "excerpts": [{"t": 1.9, "text": "..."}],
+        "markers": [{"t": 30, "label": "operational cap"}],
+        "final": {"predicted": "c1c8", "expected": "b3d5",
+                  "correct": false, "wall_seconds": 127.4, "note": "..."},
+        "unfinished": false
       }
     }
 """
@@ -72,17 +86,22 @@ _CSS = """
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-.wrap{max-width:1060px;margin:0 auto;padding:40px 22px 80px}
+.wrap{max-width:1160px;margin:0 auto;padding:40px 22px 80px}
 .serif{font-family:"Iowan Old Style",Palatino,Georgia,serif}
 .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
 .eyebrow{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:650}
 h1{font-size:clamp(26px,4.5vw,38px);line-height:1.12;margin:8px 0 8px;text-wrap:balance;font-weight:600}
-.task{color:var(--ink-2);max-width:70ch;margin:0 0 20px;font-size:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-@media (max-width:880px){.grid{grid-template-columns:1fr}}
+.task{color:var(--ink-2);max-width:66ch;margin:0;font-size:16px}
+.hero{display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap;margin-bottom:26px}
+.hero .intro{flex:1 1 420px;min-width:300px}
+.board{flex:0 0 auto}
+.board svg{display:block;max-width:100%;height:auto;border-radius:10px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08),0 6px 20px rgba(0,0,0,.08)}
+.board figcaption{font-size:12.5px;color:var(--ink-2);text-align:center;margin-top:8px}
+.stack{display:grid;gap:20px}
 .pane{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;
   box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05)}
-.pane-h{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.pane-h{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .pane-h .t{font-weight:650;font-size:14px}
 .pane-h .badge{margin-left:auto}
 .pane-b{padding:14px 16px}
@@ -99,59 +118,111 @@ h1{font-size:clamp(26px,4.5vw,38px);line-height:1.12;margin:8px 0 8px;text-wrap:
 .budget{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
 /* raw stream pane */
 .stream{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;line-height:1.62;
-  color:var(--ink-2);max-height:560px;overflow-y:auto;padding-right:6px}
+  color:var(--ink-2);max-height:430px;overflow-y:auto;padding-right:6px;
+  column-width:430px;column-gap:34px;column-rule:1px solid var(--line)}
+.stream>div{break-inside:avoid;margin-bottom:10px}
 .stream .tick{display:block;font-size:10.5px;color:var(--base);letter-spacing:.08em;
-  margin:14px 0 3px;font-weight:700}
-.stream .tick:first-child{margin-top:0}
-.stream p{margin:0 0 8px;white-space:pre-wrap;word-break:break-word}
+  margin:0 0 3px;font-weight:700}
+.stream p{margin:0;white-space:pre-wrap;word-break:break-word}
 .ellipsis{color:var(--crit);font-weight:700;letter-spacing:.18em;font-size:16px}
 @media (prefers-reduced-motion: no-preference){
   .ellipsis{animation:blink 1.4s steps(1) infinite}
   @keyframes blink{50%{opacity:.25}}}
-.cut{border:0;border-top:2px dashed var(--crit);margin:10px 0 8px;position:relative}
+.cut{border:0;border-top:2px dashed var(--crit);margin:4px 0 6px}
 .cutlabel{font-size:11px;color:var(--crit);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-/* tree */
-.tree{list-style:none;margin:0;padding:0}
-.tree ul{list-style:none;margin:0;padding-left:20px;border-left:2px solid var(--line)}
-.tree li{margin:0 0 8px}
-details.node>summary{list-style:none;cursor:pointer;display:block;border:1px solid var(--line);
-  border-radius:9px;background:var(--card);padding:8px 12px;position:relative}
-details.node>summary::-webkit-details-marker{display:none}
-details.node>summary:focus-visible{outline:2px solid var(--base);outline-offset:2px}
-details.node[open]>summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
-details.node>.kids{border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;
-  padding:10px 12px 6px;background:var(--card-2)}
-.n-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.n-act{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;font-size:13.5px}
-.n-role{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
-.n-score{margin-left:auto;display:flex;align-items:center;gap:8px}
-.sbar{width:74px;height:7px;border-radius:4px;background:var(--card-2);position:relative;overflow:hidden;
+/* ---- horizontal tree ---- */
+.htree-scroll{overflow-x:auto;padding:8px 2px 14px}
+.htree{display:inline-flex;flex-direction:column;gap:14px;min-width:100%}
+.brow{display:flex;align-items:center}
+.ncard{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:9px 13px;
+  min-width:210px;max-width:290px;flex:none;position:relative}
+.ncard.toggle{cursor:pointer}
+.ncard.toggle:focus-visible{outline:2px solid var(--base);outline-offset:2px}
+.ncard.v-selected{border-color:var(--rt);border-width:2px;box-shadow:0 2px 10px rgba(23,138,82,.18)}
+.ncard.v-refuted{border-color:color-mix(in srgb, var(--crit) 55%, var(--line))}
+.n-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.n-act{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;font-size:14px}
+.n-role{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.n-score{margin-left:auto;display:flex;align-items:center;gap:7px}
+.sbar{width:56px;height:6px;border-radius:4px;background:var(--card-2);position:relative;overflow:hidden;
   border:1px solid var(--line)}
 .sbar i{position:absolute;inset:0 auto 0 0;border-radius:3px}
-.n-sval{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;font-weight:650;min-width:44px;text-align:right}
-.n-note{font-size:13px;color:var(--ink-2);margin:5px 0 0;max-width:64ch}
-.n-line{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;color:var(--ink-3);margin-top:4px}
-.n-line b{color:var(--ink-2)}
-.caret{display:inline-block;transition:transform .15s ease;color:var(--ink-3);font-size:11px}
-details[open]>summary .caret{transform:rotate(90deg)}
+.n-sval{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;font-weight:650}
+.n-note{font-size:12px;color:var(--ink-2);margin:4px 0 0;line-height:1.45}
+.n-line{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10.5px;color:var(--ink-3);margin-top:4px}
+.n-line b{color:var(--ink-2);font-weight:650}
+.caret{position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:18px;height:18px;
+  border-radius:99px;background:var(--card);border:1.5px solid var(--line);color:var(--ink-2);
+  font-size:10px;line-height:15px;text-align:center;transition:transform .15s ease;z-index:1}
+.brow.open>.ncard>.caret{transform:translateY(-50%) rotate(90deg)}
+.ncard.root{background:var(--card-2);min-width:150px;max-width:190px;border-style:solid;
+  border-color:var(--ink-3)}
+.ncard.root .n-act{font-size:12.5px}
+.stub{width:30px;height:0;border-top:3px solid var(--ink-3);opacity:.55;flex:none;align-self:center}
+.brow.sel>.stub{border-top:4px solid var(--rt);opacity:1}
+.brow.ref>.stub{border-top:2px solid var(--crit);opacity:.7}
+ul.kids{list-style:none;display:flex;flex-direction:column;gap:12px;margin:0;padding:6px 0}
+ul.kids>li{position:relative;padding-left:30px;display:flex}
+ul.kids>li::before{content:"";position:absolute;left:0;top:50%;width:30px;border-top:3px solid var(--ink-3);opacity:.55}
+ul.kids>li::after{content:"";position:absolute;left:-1.5px;top:0;bottom:0;border-left:3px solid var(--ink-3);opacity:.55}
+ul.kids>li:first-child::after{top:50%}
+ul.kids>li:last-child::after{bottom:50%}
+ul.kids>li:first-child:last-child::after{display:none}
+ul.kids>li.sel::before{border-top:4px solid var(--rt);top:calc(50% - 1px);opacity:1}
+ul.kids>li.ref::before{border-top:2px solid var(--crit);opacity:.7}
+.brow[data-collapsed="1"]>.stub,.brow[data-collapsed="1"]>ul.kids{display:none}
+/* ---- vertical fallback tree ---- */
+.vtree{list-style:none;margin:0;padding:0}
+.vtree ul{list-style:none;margin:0;padding-left:20px;border-left:2px solid var(--line)}
+.vtree li{margin:0 0 8px}
+details.node>summary{list-style:none;cursor:pointer;display:block;border:1px solid var(--line);
+  border-radius:9px;background:var(--card);padding:8px 12px}
+details.node>summary::-webkit-details-marker{display:none}
+details.node>summary:focus-visible{outline:2px solid var(--base);outline-offset:2px}
+details.node>.dkids{border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;
+  padding:10px 12px 6px;background:var(--card-2)}
 .node.v-selected>summary{border-color:var(--rt);box-shadow:inset 3px 0 0 var(--rt)}
 .node.v-refuted>summary{box-shadow:inset 3px 0 0 var(--crit)}
-.legendrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* shared */
 .controls{display:flex;gap:8px;margin:0 0 12px}
 .controls button{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-2);
   background:var(--card-2);border:1px solid var(--line);border-radius:7px;padding:4px 12px;cursor:pointer}
 .controls button:focus-visible{outline:2px solid var(--base);outline-offset:1px}
-.verdictline{margin-top:16px;padding:12px 14px;border-radius:9px;background:var(--rt-soft);
+.verdictline{margin-top:14px;padding:12px 14px;border-radius:9px;background:var(--rt-soft);
   color:var(--ink);font-size:14px}
 .verdictline b{color:var(--rt)}
-.foot{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink-2);margin-top:12px}
+.legend .li{display:flex;align-items:center;gap:7px}
+.legend .sw{width:22px;flex:none}
+.legend .sw.selline{border-top:4px solid var(--rt)}
+.legend .sw.survline{border-top:2.5px solid var(--line)}
+.legend .sw.refline{border-top:2px solid color-mix(in srgb, var(--crit) 60%, var(--line))}
+.foot{margin-top:30px;font-size:12px;color:var(--ink-3);line-height:1.6}
 """
 
 _JS = """
+function setOpen(row, open){
+  row.setAttribute('data-collapsed', open ? '0' : '1');
+  row.classList.toggle('open', open);
+  var card = row.querySelector(':scope > .ncard');
+  if (card) card.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.querySelectorAll('.brow').forEach(function(row){
+  var card = row.querySelector(':scope > .ncard.toggle');
+  if(!card) return;
+  function flip(){ setOpen(row, row.getAttribute('data-collapsed') === '1'); }
+  card.addEventListener('click', flip);
+  card.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); }
+  });
+});
 document.querySelectorAll('[data-expand]').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    var open = btn.getAttribute('data-expand')==='1';
-    document.querySelectorAll('details.node').forEach(function(d){d.open=open;});
+  btn.addEventListener('click', function(){
+    var open = btn.getAttribute('data-expand') === '1';
+    document.querySelectorAll('.brow').forEach(function(row){
+      if(row.querySelector(':scope > .ncard.toggle')) setOpen(row, open);
+    });
+    document.querySelectorAll('details.node').forEach(function(d){ d.open = open; });
   });
 });
 """
@@ -177,7 +248,7 @@ def _score_bar(node: dict[str, Any], max_abs: float) -> str:
     )
 
 
-def _render_node(node: dict[str, Any], max_abs: float, depth: int) -> str:
+def _card_inner(node: dict[str, Any], max_abs: float) -> str:
     verdict = str(node.get("verdict", ""))
     chip_kind, chip_text = _VERDICT_CHIP.get(verdict, ("", ""))
     chip = f'<span class="chip {chip_kind}"><span class="dot"></span>{_esc(chip_text)}</span>' if chip_kind else ""
@@ -189,22 +260,64 @@ def _render_node(node: dict[str, Any], max_abs: float, depth: int) -> str:
     line_html = (
         f'<div class="n-line">line: <b>{_esc(" ".join(str(m) for m in line))}</b></div>' if line else ""
     )
+    return (
+        f'<div class="n-top"><span class="n-act">{_esc(node.get("action", ""))}</span>'
+        f"{role_html}{chip}{_score_bar(node, max_abs)}</div>{note_html}{line_html}"
+    )
+
+
+def _li_class(node: dict[str, Any]) -> str:
+    verdict = str(node.get("verdict", ""))
+    if verdict == "selected":
+        return "sel"
+    if verdict == "refuted":
+        return "ref"
+    return ""
+
+
+def _render_hnode(node: dict[str, Any], max_abs: float, depth: int) -> str:
+    verdict = str(node.get("verdict", ""))
     children = node.get("children") or []
-    kids_html = ""
-    caret = ""
+    is_root = bool(node.get("_root"))
+    expanded = is_root or verdict == "selected" or depth > 0
+    row_classes = ["brow"]
+    if _li_class(node):
+        row_classes.append(_li_class(node))
+    if expanded and children:
+        row_classes.append("open")
+    toggleable = bool(children) and not is_root
+    card_classes = ["ncard", "root" if is_root else "", f"v-{verdict}" if verdict else "", "toggle" if toggleable else ""]
+    caret = '<span class="caret" aria-hidden="true">&#9656;</span>' if toggleable else ""
+    toggle_attrs = (
+        f' role="button" tabindex="0" aria-expanded="{"true" if expanded else "false"}"' if toggleable else ""
+    )
+    card = (
+        f'<div class="{" ".join(c for c in card_classes if c)}"{toggle_attrs}>'
+        f"{_card_inner(node, max_abs)}{caret}</div>"
+    )
+    kids = ""
+    stub = ""
     if children:
-        caret = '<span class="caret">&#9656;</span> '
-        inner = "".join(f"<li>{_render_node(c, max_abs, depth + 1)}</li>" for c in children)
-        kids_html = f'<div class="kids"><ul class="tree">{inner}</ul></div>'
+        stub = '<div class="stub"></div>'
+        items = "".join(
+            f'<li class="{_li_class(c)}">{_render_hnode(c, max_abs, depth + 1)}</li>' for c in children
+        )
+        kids = f'<ul class="kids">{items}</ul>'
+    collapsed = "0" if (expanded or not children) else "1"
+    return f'<div class="{" ".join(row_classes)}" data-collapsed="{collapsed}">{card}{stub}{kids}</div>'
+
+
+def _render_vnode(node: dict[str, Any], max_abs: float, depth: int) -> str:
+    verdict = str(node.get("verdict", ""))
+    children = node.get("children") or []
+    caret = '<span class="caret-v">&#9656;</span> ' if children else ""
+    summary = f"<summary>{caret}{_card_inner(node, max_abs)}</summary>"
+    kids_html = ""
+    if children:
+        inner = "".join(f"<li>{_render_vnode(c, max_abs, depth + 1)}</li>" for c in children)
+        kids_html = f'<div class="dkids"><ul class="vtree">{inner}</ul></div>'
     open_attr = " open" if verdict == "selected" and depth == 0 else ""
     classes = f"node v-{verdict}" if verdict else "node"
-    summary = (
-        f'<summary><div class="n-top">{caret}<span class="n-act">{_esc(node.get("action", ""))}</span>'
-        f"{role_html}{chip}{_score_bar(node, max_abs)}</div>{note_html}{line_html}</summary>"
-    )
-    if not children:
-        # childless nodes render as non-collapsible cards for cleaner keyboard flow
-        return f'<details class="{classes}"{open_attr}>{summary}</details>'
     return f'<details class="{classes}"{open_attr}>{summary}{kids_html}</details>'
 
 
@@ -233,19 +346,18 @@ def _render_raw_pane(raw: dict[str, Any]) -> str:
     else:
         status_chip = '<span class="chip ok badge"><span class="dot"></span>completed</span>'
 
-    # merge excerpts and time markers into one timeline, sorted by t
     items: list[tuple[float, str]] = []
     for ex in raw.get("excerpts", []):
         t = float(ex.get("t", 0))
         items.append(
-            (t, f'<span class="tick">t = {_esc(ex.get("t", "?"))}s</span><p>{_esc(ex.get("text", ""))} '
-                '<span class="ellipsis">&hellip;</span></p>')
+            (t, f'<div><span class="tick">t = {_esc(ex.get("t", "?"))}s</span>'
+                f'<p>{_esc(ex.get("text", ""))} <span class="ellipsis">&hellip;</span></p></div>')
         )
     for marker in raw.get("markers", []):
         t = float(marker.get("t", 0))
         items.append(
-            (t, f'<hr class="cut"><span class="cutlabel">t = {_esc(marker.get("t", "?"))}s &mdash; '
-                f"{_esc(marker.get('label', ''))}</span>")
+            (t, f'<div><hr class="cut"><span class="cutlabel">t = {_esc(marker.get("t", "?"))}s &mdash; '
+                f"{_esc(marker.get('label', ''))}</span></div>")
         )
     items.sort(key=lambda pair: pair[0])
     parts = [chunk for _, chunk in items]
@@ -256,13 +368,13 @@ def _render_raw_pane(raw: dict[str, Any]) -> str:
         expected = f" (expected {_esc(final['expected'])})" if final.get("expected") and not final.get("correct") else ""
         note = f" &mdash; {_esc(final['note'])}" if final.get("note") else ""
         tail = (
-            f'<hr class="cut"><span class="cutlabel">t = {_esc(final.get("wall_seconds", "?"))}s &mdash; finally '
-            f"commits to {_esc(final['predicted'])} — {verdict}{expected}{note}</span>"
+            f'<div><hr class="cut"><span class="cutlabel">t = {_esc(final.get("wall_seconds", "?"))}s &mdash; finally '
+            f"commits to {_esc(final['predicted'])} — {verdict}{expected}{note}</span></div>"
         )
     elif raw.get("unfinished"):
         tail = (
-            '<hr class="cut"><span class="cutlabel">still generating when the budget ended — '
-            'no move was ever committed</span> <span class="ellipsis">&hellip;</span>'
+            '<div><hr class="cut"><span class="cutlabel">still generating when the budget ended — '
+            'no move was ever committed</span> <span class="ellipsis">&hellip;</span></div>'
         )
     meta_chips = [
         f'<span class="chip mut">wall {_esc(raw.get("wall_seconds", "?"))}s</span>',
@@ -283,13 +395,33 @@ def render_body(spec: dict[str, Any]) -> str:
     nodes = spec.get("nodes") or []
     scores = _collect_scores(nodes)
     max_abs = max(scores) if scores else 1.0
+    layout = spec.get("layout", "horizontal")
     budget = spec.get("budget") or {}
     budget_chips = "".join(
         f'<span class="chip mut">{_esc(k.replace("_", " "))}: {_esc(v)}</span>' for k, v in budget.items()
     )
     state = spec.get("state")
     state_html = f'<pre class="state">{_esc(state)}</pre>' if state else ""
-    tree_items = "".join(f"<li>{_render_node(n, max_abs, 0)}</li>" for n in nodes)
+
+    if layout == "horizontal":
+        root_label = spec.get("root_label")
+        if root_label and nodes:
+            trunk = {"action": root_label, "role": "state", "children": nodes, "_root": True}
+            tree_items = _render_hnode(trunk, max_abs, -1)
+        else:
+            tree_items = "".join(_render_hnode(n, max_abs, 0) for n in nodes)
+        tree_html = (
+            f'<div class="htree-scroll"><div class="htree">{tree_items}</div></div>'
+            '<div class="legend">'
+            '<span class="li"><span class="sw selline"></span>selected path</span>'
+            '<span class="li"><span class="sw survline"></span>surviving branch</span>'
+            '<span class="li"><span class="sw refline"></span>refuted branch</span>'
+            '<span class="li">click a node to open its counter-branches</span></div>'
+        )
+    else:
+        tree_items = "".join(f"<li>{_render_vnode(n, max_abs, 0)}</li>" for n in nodes)
+        tree_html = f'<ul class="vtree">{tree_items}</ul>'
+
     selected = spec.get("selected_action")
     verdict_html = (
         f'<div class="verdictline">Controller selection: <b>{_esc(selected)}</b> &mdash; the branch that '
@@ -297,22 +429,31 @@ def render_body(spec: dict[str, Any]) -> str:
         if selected
         else ""
     )
-    raw = spec.get("raw_trace")
     tree_pane = (
         '<section class="pane"><div class="pane-h"><span class="t">ReasonTree bounded search</span>'
         '<span class="chip ok badge"><span class="dot"></span>every branch inspectable</span></div>'
         f'<div class="pane-b">{state_html}<div class="budget">{budget_chips}</div>'
         '<div class="controls"><button type="button" data-expand="1">Expand all</button>'
         '<button type="button" data-expand="0">Collapse all</button></div>'
-        f'<ul class="tree">{tree_items}</ul>{verdict_html}</div></section>'
+        f"{tree_html}{verdict_html}</div></section>"
     )
+    raw = spec.get("raw_trace")
     panes = (_render_raw_pane(raw) + tree_pane) if raw else tree_pane
-    grid_class = "grid" if raw else ""
-    return (
-        f'<div class="wrap"><header><div class="eyebrow">{_esc(spec.get("eyebrow", "ReasonTree artifact"))}</div>'
+
+    board_svg = spec.get("board_svg")
+    board_html = ""
+    if board_svg:
+        caption = spec.get("board_caption")
+        caption_html = f"<figcaption>{_esc(caption)}</figcaption>" if caption else ""
+        board_html = f'<figure class="board" role="img">{board_svg}{caption_html}</figure>'
+    header = (
+        f'<div class="hero"><div class="intro">'
+        f'<div class="eyebrow">{_esc(spec.get("eyebrow", "ReasonTree artifact"))}</div>'
         f'<h1 class="serif">{_esc(spec.get("title", "ReasonTree search"))}</h1>'
-        f'<p class="task">{_esc(spec.get("task", ""))}</p></header>'
-        f'<div class="{grid_class}">{panes}</div>'
+        f'<p class="task">{_esc(spec.get("task", ""))}</p></div>{board_html}</div>'
+    )
+    return (
+        f'<div class="wrap">{header}<div class="stack">{panes}</div>'
         f'<footer class="foot">{_esc(spec.get("footnote", ""))}</footer></div>'
     )
 

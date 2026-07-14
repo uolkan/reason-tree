@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import chess
+import chess.svg
 
 from .chess_tree import MATE_SCORE, PIECE_VALUES, ChessTreeSearch, SearchConfig
 
@@ -150,6 +151,13 @@ def build_spec(
         nodes.append(node)
 
     side = "White" if board.turn == chess.WHITE else "Black"
+    selected_move = chess.Move.from_uci(root_search.branches[0].move_uci)
+    board_svg = chess.svg.board(
+        board,
+        orientation=board.turn,
+        arrows=[chess.svg.Arrow(selected_move.from_square, selected_move.to_square, color="#178A52")],
+        size=340,
+    )
     spec: dict[str, Any] = {
         "eyebrow": "ReasonTree · bounded chess state-action search",
         "title": title or f"{side} to move: which branch survives?",
@@ -159,7 +167,11 @@ def build_spec(
             "one on a real copied board, lets the opponent choose its strongest reply, and scores the "
             "outcome under a strict budget."
         ),
-        "state": f"FEN: {fen}\n\n{board}",
+        "layout": "horizontal",
+        "root_label": f"{side} to move",
+        "board_svg": board_svg,
+        "board_caption": f"{side} to move · green arrow = controller selection {root_search.branches[0].move_san}",
+        "state": f"FEN: {fen}",
         "budget": {
             "depth": depth,
             "max_nodes": max_nodes,

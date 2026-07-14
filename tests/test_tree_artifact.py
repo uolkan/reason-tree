@@ -40,6 +40,32 @@ class TreeArtifactTest(unittest.TestCase):
         self.assertNotIn("<body", html.lower())
         self.assertIn("<title>t</title>", html)
 
+    def test_horizontal_layout_draws_connectors_and_trusted_board_svg(self) -> None:
+        spec = {
+            "title": "h",
+            "layout": "horizontal",
+            "board_svg": '<svg data-board="1"></svg>',
+            "board_caption": "White to move",
+            "nodes": [
+                {
+                    "action": "A",
+                    "verdict": "selected",
+                    "score": 10,
+                    "children": [{"action": "b", "role": "reply", "score": -5}],
+                }
+            ],
+        }
+        html = render_page(spec)
+        self.assertIn('<svg data-board="1"></svg>', html)  # passed through unescaped
+        self.assertIn('class="kids"', html)
+        self.assertIn('class="stub"', html)
+        self.assertIn('data-collapsed="0"', html)  # selected root starts open
+        self.assertIn("selected path", html)  # legend
+
+    def test_vertical_layout_still_uses_details(self) -> None:
+        html = render_page({"title": "v", "layout": "vertical", "nodes": [{"action": "A", "verdict": "selected"}]})
+        self.assertIn("<details", html)
+
 
 class ChessArtifactSpecTest(unittest.TestCase):
     def test_mate_in_two_spec_selects_unique_key_move(self) -> None:
