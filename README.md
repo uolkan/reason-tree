@@ -2,296 +2,121 @@
 
 # ReasonTree
 
-**Give a fast model an executable search tree before it burns inference on an opaque guess.**
+**When a language model thinks out loud, it gets one stream and no undo.
+ReasonTree gives it a tree — and lets executed checks, not confidence, have the last word.**
 
-ReasonTree is a provider-neutral skill and Python controller for everyday problems where a one-shot answer can hide an unsupported assumption. It runs through Claude Code or Codex CLI using the user's existing subscription login.
+[Two-tier chess benchmark](docs/CHESS_BENCHMARK.md) ·
+[The full illustrated tour](docs/examples/why-give-a-model-a-tree.html) ·
+[Case study & negative results](docs/CASE_STUDY.md)
+
+<img src="assets/hero-tree.png" alt="A ReasonTree search rendered as a navigable tree: candidate moves as branches, the opponent's strongest replies as counter-branches, scores and verdicts on every node" width="820">
+
+*A real search, rendered by the repo's own artifact renderer: every branch inspectable, every score explainable, the selected path in bold.*
 
 </div>
 
-## What It Does
+## The story in one paragraph
 
-The default path is intentionally small:
+Ask a fast model a hard question and it answers the way it was built to: one word at a time, in a single unbroken stream. It cannot lay two ideas side by side, cannot put an idea down and come back, and has no scratchpad except its own words — so on problems with precise, changing state, the words drift and the model gets confidently lost. We captured this happening, verbatim: on a rated chess puzzle with **no time or budget limits**, Claude Haiku circled the same candidate three times, misremembered the board, and after 127 seconds committed to a move that was not just wrong but *illegal*. ReasonTree is a small controller built around the fix: turn the problem into a **tree of real, executable states** — candidate actions as branches, an adversary's best reply pushing back on each, scores under a strict compute budget, and a **verifier** (executed code, never another opinion) holding the last word. The same model then explains the branch that survived, in one short call.
+
+## The headline result: same pattern, two model tiers
+
+The claim isn't "our model is smarter." It's that the *same unchanged controller* rescues models at whatever level they fail — measured on frozen, pre-registered Lichess holdouts with the answer key sealed until scoring:
+
+| Tier | Condition | Correct | Median time |
+| --- | --- | ---: | ---: |
+| Puzzles rated 1809–1819 | raw **Haiku**, no tools, 30s cap | **1/25** | 30.0s |
+| | same puzzles, bounded adapter | **21/25** | 5.7s |
+| Puzzles rated 2200–2300 | raw **Sonnet 5**, no tools, **240s** cap | **3/25** | 57s |
+| | same puzzles, *unchanged* adapter | **18/25** | 3.0s |
+
+At each tier, the first ten "model failed, tree solved" cases were re-run end-to-end with the model as the explanation layer: **10/10 correct both times**, at ~$0.008–0.014 and 5–21 seconds per case — roughly 5× faster and 12× cheaper than the raw attempts they replace. Paired detail worth noting: across both tiers, **raw-only wins: 0**. In separate uncapped probes, raw calls left running for up to 10 minutes still converged mostly to wrong (and once illegal) answers — the failure is miscalibrated confidence, not lack of time. Full protocol, cost tables, and the two honest surprises (deeper search scored *worse* — a textbook horizon effect; and a CPU-contention gotcha that briefly produced wrong results before the serial re-run) are in [the benchmark](docs/CHESS_BENCHMARK.md).
+
+A cross-provider observation, reported as measured: GPT-5.6 Luna shows a different failure profile — a gradual decline with no cliff (3/5 → 1/5 from rating 2000 to 2600, holdout 6/25) — and gets the same kind of uplift from the tree (tree-only 14, raw-only 2). All runs are archived under [`benchmarks/chess/results/`](benchmarks/chess/results/).
+
+## It's not about chess
+
+Chess is just the microscope — the one domain where nobody can argue with the scoreboard. The controller is domain-neutral: an adapter is five functions,
 
 ```text
-task -> state ledger -> bounded branches -> executable transition/check -> one model explanation
+state → candidate actions → executable transition → score / check → stop rule
 ```
 
-It is not a bigger model. The core product is a control layer, while chess is one test adapter: separate facts from assumptions, make transitions real when possible, run a check, and let a fast model explain the bounded result.
+and the repository ships real, captured demonstrations of the same machinery on everyday problems ([full illustrated write-ups](docs/examples/why-give-a-model-a-tree.html), evidence in [`benchmarks/everyday/`](benchmarks/everyday/)):
 
-The failure mode ReasonTree targets is not just "the model got it wrong." It is the messier pattern where a one-shot call thinks for a long time, spends a lot of tokens inside an opaque chain, and still lands on an unsupported answer or no usable answer at all.
+- **"Two alarms, one email"** — two same-vendor phishing scanners both flag a message; what's the probability it's real? Raw Haiku *noticed* the correlated-evidence trap mid-thought ("I should acknowledge this uncertainty rather than pick an arbitrary number") — then answered **"77%"** anyway. The tree routes the question to a dependence-bounds verifier: the honest answer is **underdetermined, 13.9%–100%**, plus the exact measurement that would settle it. Same trap, everywhere: two medical tests from one lab, two references with one source, two models trained on the same data.
+- **"The bug that wasn't where it looked"** — a config leak with a famous decoy (`overrides={}`) standing next to the real culprit (`lru_cache` sharing one mutable dict). The tree treats each suspect as a branch and *executes the code*: symptom reproduced, decoy cleared by observation, fix re-run and watched working — proof instead of plausibility, at half the cost of the raw attempt.
+- **"Ship now or wait a week?"** — a judgment call with a hidden collision between two dated facts (a deploy window and a renewal compliance test). No verifier exists for decisions, and the tree doesn't pretend otherwise: advocate branches argue each option, a skeptic pass cross-examines both against every stated fact, and the recommendation ships with its assumptions **labeled**, marked `unverified`. A single stream *may* notice a buried fact; a skeptic pass *must* check.
 
-ReasonTree treats that as a verification-control problem:
+Adapters we'd write next, same contract: code repair (patches → worktree → tests), scheduling (slots → timezone math → constraint check), SQL/data work (query → execute on sample → invariant check), budget/compliance (allocation → arithmetic → rule check).
 
-- default to a few branches, not an open-ended agent fleet
-- make state transitions executable when the domain allows it
-- use deterministic verifier adapters for checkable claims
-- reject demanded false precision when the facts do not identify one answer
-- call the subscription model once to explain authoritative evidence
-- escalate to deeper tournament workflows only when the fast path cannot resolve the task
+## How it differs from Tree of Thoughts, MCTS & friends
 
-Current executable/check adapters:
+Every primitive here has ancestry — branching and scoring (Tree of Thoughts), graph refinement (GoT), adversarial state search (MCTS), self-critique (Reflexion) — and the [tour's comparison section](docs/examples/why-give-a-model-a-tree.html) says so plainly. The deliberate difference is one stubborn design rule:
 
-- dependence bounds for repeated tests, alerts, and correlated evidence
-- bounded chess state-action search and forced-mate verification
+> **The model never gets the last word on anything a machine can check.**
 
-The adapter surface is intended to grow to time zones, units/double-counting checks, code tests, and source-backed fact checks.
+In ToT-family methods the model grades its own thoughts; research (Huang et al., arXiv 2310.01798) shows self-correction without external feedback fixes wrong answers about as often as it breaks right ones. ReasonTree routes around that ceiling: executable verifiers where the domain allows, honest `unverified` / `underdetermined` labels where it doesn't, and a hard compute budget on every search. We probed the difference directly with a ToT-style propose×3-and-vote harness (our emulation): it went 1/2 on chess rescues at ~$0.20 and ~4 minutes per puzzle, and on the correlated-alerts trap it *named the correct conclusion* ("that argues for a range, not a specific guess") — then answered "15.4%" anyway. **Branches without a verifier are opinions with better formatting.** A full head-to-head against the official ToT/GoT codebases hasn't been run (by us or, to our knowledge, anyone, for the verifier-gated setup) — it's the obvious next experiment and this repo is set up to run it.
 
-## New: Rated Chess Holdout
+## Where it honestly doesn't help
 
-The current reproducible result uses 25 frozen Lichess holdout puzzles rated 1809-1819:
+- **Models that already verify:** with tools enabled, one-shot agents wrote their own checkers and nearly saturated AIME — matched-compute tree search added only cost. Published in [the case study](docs/CASE_STUDY.md).
+- **Prompt-only trees:** "think in branches" as phrasing, even with all legal moves listed, solved nothing. The structure must be in the machinery.
+- **Judgment calls:** the tree sharpens them (branches, skeptic, labeled assumptions) but cannot certify them — and says so.
 
-| Tier | Condition | Correct | Median wall time |
-| --- | --- | ---: | ---: |
-| 1809-1819 | raw Haiku, no tools, 30s cap | 1/25 | 30.02s |
-| 1809-1819 | bounded ReasonTree chess adapter | 21/25 | 5.70s |
-| 2200-2300 | raw Sonnet 5, no tools, 240s cap | 3/25 | 57s |
-| 2200-2300 | same adapter, unchanged config | 18/25 | 3.0s |
+## Try it
 
-The pattern survives a model tier: at 2200-2300, raw Sonnet 5 solved 3/25 despite an 8x longer budget, the unchanged adapter solved 18/25, and the first ten rescue cases ran end-to-end through tree + Sonnet explanation at 10/10, ~11s and ~$0.008 per case. Deeper search configs (depth 5/6) scored *worse* than the frozen depth-4 — the horizon-effect analysis is in the benchmark doc.
-
-The first ten holdout cases where direct Haiku failed and the bounded tree succeeded were then run through the full tree + Haiku explanation path. It returned 10/10 correct in 8.12-21.47 seconds per case. The complete protocol, all 25 paired outcomes, cost boundaries, and caveats are in [the rated chess benchmark](docs/CHESS_BENCHMARK.md).
-
-In separate long-run telemetry trials, all ten raw prompts still returned no usable move after 102-180 seconds. Six emitted final cost metadata; on those matched cases, tree + Haiku was 9.6x faster, 4.65x cheaper, and used 19.8x fewer model output tokens. The other four raw costs remain unknown.
-
-The important finding is architectural: a prompt saying “think in a tree” was not enough. The gain appeared when ReasonTree externalized legal state transitions, adversarial replies, scoring, and stop rules into executable code. Chess is the microscope; other domains need their own real adapters.
-
-Run the first rescue case locally without a model call:
+Everything runs on subscription CLIs — no API key required (`claude -p` for Claude Code, `codex exec` for Codex):
 
 ```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e .
+
+# the bounded chess adapter, no model call needed
 .venv/bin/reasontree-chess-tree \
   --fen '2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23' \
   --depth 4 --quiescence-depth 3 --max-nodes 300000 --timeout-s 12
-```
 
-## Navigable Tree Artifacts
+# a deterministic everyday verifier through your subscription model
+.venv/bin/reasontree-check --provider claude --model haiku \
+  --case-file examples/correlated-alerts.json
 
-The search tree is not just a log — it can be rendered as a self-contained, navigable HTML artifact in which every branch, counter-branch, score, and stop budget is expandable and inspectable:
-
-```bash
+# render any search as a navigable HTML artifact (the hero image above)
 .venv/bin/reasontree-chess-artifact \
   --fen '2r2rk1/4q1p1/p3p2p/1p1b4/P7/1QN1RP2/1P3P1P/2R3K1 w - - 0 23' \
   --output tree.html
 ```
 
-The renderer itself is domain-neutral: any adapter can emit the same tree-spec JSON and pipe it through `reasontree-tree-artifact --spec spec.json --output tree.html`. The chess producer adds the opponent's strongest replies as real counter-branches by re-searching each successor position, and can embed a captured raw-model stream side by side for comparison (`--raw-probe`).
-
-A full blog-style tour built with the same renderer is committed at [`docs/examples/why-give-a-model-a-tree.html`](docs/examples/why-give-a-model-a-tree.html). It walks through four captured experiments in plain language, each exercising a different tree feature: the chess rescue (executable state + adversarial reply), an everyday probability trap where raw Haiku noticed the flaw mid-thought and still answered "77%" while the dependence verifier proved the honest range is 13.9-100% (gap rule), a debugging session where the verifier executed the code, cleared the famous mutable-default decoy by observation, and verified the fix for half the cost of the raw attempt, and a dated-facts business decision where the skeptic pass surfaced a deploy-vs-compliance-test collision and labeled every unverifiable assumption. It closes with an honest positioning against Tree of Thoughts, Graph of Thoughts, MCTS, and Reflexion, including a small propose-and-vote ToT-style probe (1/2 on the chess rescues; named the right conclusion on the alerts trap and still answered "15.4%"). All raw streams and run outputs: [`benchmarks/everyday/`](benchmarks/everyday/).
-
-A generated single-case example is committed at [`docs/examples/rescue-03kkE.html`](docs/examples/rescue-03kkE.html): the left pane replays raw Haiku's verbatim generation stream on rescue puzzle 03kkE — circling between candidates, hallucinating the board, and finally committing to an illegal move after 127 seconds — while the right pane shows the bounded tree that selects the correct `Qxd5` in under five seconds. The captured streams live in [`benchmarks/chess/results/probe600/`](benchmarks/chess/results/probe600/), and the uncapped-probe protocol is in [the chess benchmark](docs/CHESS_BENCHMARK.md).
-
-## Subscription CLI Usage
-
-Claude Code's non-interactive command is `claude -p`. The Codex equivalent is `codex exec`; `codex -p` means profile, not print mode.
+Install the skill so `/reasontree <task>` works in Claude Code (or `$reasontree` in Codex):
 
 ```bash
-claude -p "your task" --model haiku
-codex exec --ephemeral -m gpt-5.6-luna "your task"
+mkdir -p ~/.claude/skills && cp -R .claude/skills/reasontree ~/.claude/skills/
+mkdir -p ~/.codex/skills  && cp -R .claude/skills/reasontree ~/.codex/skills/
 ```
 
-Both CLIs support account login rather than requiring a manually pasted API key. This repo was tested with Claude Max and Codex signed in through ChatGPT. See the official [Claude Code setup](https://docs.anthropic.com/en/docs/claude-code/getting-started), [Claude CLI reference](https://docs.anthropic.com/en/docs/claude-code/cli-usage), and [Codex with a ChatGPT plan](https://help.openai.com/en/articles/11369540-using-codex-with-chatgpt).
+The skill prefers an executable adapter, falls back to a direct/counterexample pair with the cheapest real verifier, and labels prompt-only trees `unverified`. Deeper multi-agent workflows (`/reasontree-deep`, `/reasontree-verify` — bounded tournament and adversarial refute-then-repair) live in [`.claude/workflows/`](.claude/workflows/) for the cases where a plausible-but-wrong answer would be expensive.
 
-Install the local controller:
+Any adapter can emit the domain-neutral tree-spec JSON and render it with `reasontree-tree-artifact --spec spec.json --output tree.html` — collapsible branches, verdict-weighted connector lines, and an optional side-by-side pane replaying a captured raw-model stream (see [`docs/examples/rescue-03kkE.html`](docs/examples/rescue-03kkE.html)).
 
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -e .
-```
+## Reproduce everything
 
-Run the same checked case through either subscription:
-
-```bash
-.venv/bin/reasontree-check \
-  --provider claude --model haiku \
-  --case-file examples/correlated-alerts.json
-
-.venv/bin/reasontree-check \
-  --provider codex --model gpt-5.6-luna \
-  --case-file examples/correlated-alerts.json
-```
-
-## Install The Skill
-
-Claude Code and Codex can install the same skill folder.
-
-Personal install, available in every Claude Code project:
-
-```bash
-mkdir -p ~/.claude/skills
-cp -R .claude/skills/reasontree ~/.claude/skills/
-```
-
-Codex personal install:
-
-```bash
-mkdir -p ~/.codex/skills
-cp -R .claude/skills/reasontree ~/.codex/skills/
-```
-
-Invoke it as `/reasontree <task>` in Claude Code or `$reasontree <task>` in Codex. The skill prefers an executable adapter, falls back to a direct/counterexample pair, and labels prompt-only trees unverified.
-
-Claude example:
+The benchmark source of truth is committed: frozen manifests ([1809–1819](benchmarks/chess/lichess_1800_2000_v1.json), [2200–2300](benchmarks/chess/lichess_2200_2300_v1.json), CC0 Lichess data), machine-readable results, verbatim captured thought streams, and the exact CLI commands in [the benchmark doc](docs/CHESS_BENCHMARK.md). The benchmark harness (`reasontree-chess-eval`) resumes safely and supports direct / matched / prompt-tree / tree / tree-explain conditions across Claude and Codex providers. Every chart page in `docs/examples/` was generated by the repo's own renderer.
 
 ```text
-/reasontree <your task>
-```
-
-Example:
-
-```text
-/reasontree I need to choose between shipping a small fix today or waiting for a larger refactor next week.
-Facts: customer impact is high, rollback is easy, refactor risk is medium.
-Goal: choose the lowest-regret next action.
-```
-
-## Optional Deep Workflows
-
-The dynamic Claude workflows use separate ledger, search, verifier, and synthesis agents. They are research/advanced options, not the everyday default:
-
-```bash
-mkdir -p .claude/workflows
-cp /path/to/reason-tree/.claude/workflows/reasontree-deep.js .claude/workflows/
-cp /path/to/reason-tree/.claude/workflows/reasontree-verify.js .claude/workflows/
-```
-
-Use the tournament workflow for a bounded, verifier-gated search:
-
-```text
-/reasontree-deep <your task>
-```
-
-Use the more expensive adversarial variant when a plausible-but-wrong answer would be costly:
-
-```text
-/reasontree-verify <your task>
-```
-
-`reasontree-verify` adds three independent refutation passes after search. It is not the default for routine work.
-
-## Skill Prompt
-
-The skill lives here:
-
-```text
-.claude/skills/reasontree/SKILL.md
-```
-
-It is intentionally general. Verification patterns live in `references/verification-patterns.md`; chess is only one deterministic adapter and visual demo.
-
-## Python Backend
-
-The default controller is Python:
-
-```text
-Python verifier adapter -> authoritative evidence -> claude -p or codex exec -> concise explanation
-```
-
-The controller owns verification and provider invocation. A weak model is not allowed to replace deterministic evidence with a plausible point estimate. The older `reasontree` command remains available for general tree experiments.
-
-General tree experiment:
-
-```bash
-reasontree \
-  --task "Choose the best next step for this product decision..." \
-  --model sonnet \
-  --effort medium \
-  --max-depth 3 \
-  --branch-width 3 \
-  --keep-paths 2 \
-  --trace-log trace.jsonl
-```
-
-`--max-budget-usd` is optional. It is not used by default.
-
-## Everyday Showcase: Correlated Security Alerts
-
-Two phishing scanners each have 90% sensitivity and 5% false-positive rate. Both flag an email whose prior phishing probability is 1%. The scanners share code and training data, but no joint-error measurement is available.
-
-A tempting answer multiplies the scanner likelihoods and reports 76.6%. That number assumes conditional independence, which the facts do not establish. The deterministic dependence adapter proves:
-
-```text
-identified exact probability: no
-admissible posterior range: 13.9% to 100%
-independence scenario: 76.6% (one unproven interior point)
-```
-
-On the dated 2026-07-12 subscription run:
-
-| Condition | Result |
-| --- | --- |
-| Haiku one prompt | returned an unsupported ~15% point estimate and an incorrect 15%-77% range |
-| agent-only deep ReasonTree | consumed 33k output tokens and still invented a 20% estimate |
-| deterministic `reasontree-check` + Haiku | correct four-line answer in 9.96s with 960 output tokens |
-| GPT-5.6 Luna one prompt | already rejected false precision correctly |
-| deterministic `reasontree-check` + Luna | same checked answer in 4.86s |
-
-This is the main non-chess story: the improvement comes from moving verification into the controller, not from asking a weak model to reason longer. Full prompts, caveats, and benchmark negatives are in [the case study](docs/CASE_STUDY.md).
-
-## What The Experiments Showed
-
-The original hypothesis was that explicit tree search would produce a general reasoning uplift. Matched-compute tests did not support that claim. Tool-enabled one-shot agents nearly saturated the tested AIME and enumerable logic tasks; on Haiku, the extra structured calls sometimes made results worse.
-
-The narrower result survived:
-
-> ReasonTree is useful when the model guesses instead of checking, or when one opaque attempt burns an unpredictable amount of inference. If the direct agent already verifies its work, the tree may only add cost.
-
-That negative result is part of the project, not something hidden behind the chess demo. See the dated protocols, current Haiku/Sonnet subscription reruns, and benchmark controls in [the case study](docs/CASE_STUDY.md).
-
-## Verifier-Backed Chess Showcase
-
-Chess is the visual microscope because the answer is mechanically checkable. The primary showcase is a Grimshaw interference problem:
-
-```text
-FEN: 8/B2K3Q/5p2/3k4/2p2P2/p6p/r7/b7 w - - 0 1
-White to move. Mate in 2.
-```
-
-The unique first move is the quiet retreat `1.Qb1`. A local `python-chess` search verifies that every one of Black's 14 legal defenses has a mating reply.
-
-| Start | Key move |
-| --- | --- |
-| ![Grimshaw start](assets/chess/grimshaw-start.svg) | ![Grimshaw Qb1](assets/chess/grimshaw-qb1.svg) |
-| White to move | `1.Qb1` |
-
-A second case uses a queen sacrifice to force promotion:
-
-| Start | Key move |
-| --- | --- |
-| ![Underpromotion start](assets/chess/underpromotion-start.svg) | ![Underpromotion Qb1](assets/chess/underpromotion-qb1.svg) |
-| White to move | `1.Qb1 axb1=Q/R/B/N 2.Ra8#` |
-
-On a dated 2026-07-12 subscription run, Haiku one-shot produced no usable Grimshaw answer before a manual 342-second cap after 16.3k output tokens. Haiku `reasontree-deep` returned and verified `Qb1` in 84 seconds with 7.4k output tokens. This is a single operational case, not a model-wide benchmark claim; Sonnet and Haiku also solved other cells directly after invoking their own verifier.
-
-## Optional Local Demo
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -e .
-PYTHONPATH=src .venv/bin/python -m reasontree.cli --html demo/reasontree_demo_report.html
-```
-
-## Repo Layout
-
-```text
-.claude/skills/reasontree/           reusable Claude Code and Codex skill
-.claude/workflows/                    optional tournament and adversarial workflows
-assets/chess/                        demo board images
-benchmarks/chess/                    frozen rated puzzle manifest and results
-docs/CASE_STUDY.md                   protocols, positive cases, and negative results
-docs/CHESS_BENCHMARK.md              25-case holdout protocol and 10 rescue cases
-examples/correlated-alerts.json      reproducible everyday showcase
-src/reasontree/check_cli.py          subscription-provider controller
-src/reasontree/state_search.py       generic executable state-action contract
-src/reasontree/chess_tree.py         bounded chess adapter
-src/reasontree/verifiers.py          deterministic verifier adapters
-src/reasontree/engine.py             Python ReasonTree controller
-src/reasontree/cli.py                small deterministic demo runner
-scripts/chess_mate_search.py         optional chess verifier used for local checks
-scripts/render_showcase_boards.py    regenerate the showcase SVGs
-tests/                               regression tests
+src/reasontree/state_search.py       generic bounded state-action search (the core)
+src/reasontree/chess_tree.py         chess adapter (deliberately not a full engine)
+src/reasontree/verifiers.py          deterministic everyday verifiers
+src/reasontree/check_cli.py          subscription-provider verification controller
+src/reasontree/chess_benchmark.py    benchmark harness, all conditions
+src/reasontree/tree_artifact.py      tree-spec → navigable HTML renderer
+src/reasontree/chess_artifact.py     chess → tree-spec producer
+benchmarks/                          frozen manifests, results, captured streams
+docs/                                benchmark, case study, generated example pages
+tests/                               27 regression tests
 ```
 
 ## Status
 
-ReasonTree is an early prototype. The useful claim is narrow:
+An early, honestly-scoped prototype. The claim that survives all our controls:
 
-> Externalizing real state transitions, counter-branches, scoring, and stop rules can turn a fast model's opaque attempt into a bounded, inspectable workflow. The gain depends on the adapter; prompt-only trees and extra inference are not automatically better.
+> Externalizing real state transitions, counter-branches, scoring, and stop rules turns a fast model's opaque attempt into a bounded, inspectable, *checkable* workflow. The gain lives in the executable adapter — and where no check can be executed, the output says so instead of borrowing confidence.
